@@ -100,11 +100,29 @@ div {
 	@include center;
 }
 
+.play-record-controls{ 
+	display: flex;
+	justify-content: center; 
+}
+
 .play-button {
 	@include item(black, white);
 	font-size: 3em;
 	padding: 5px;
 	margin: 9px;
+}
+
+.recording-button{
+	@extend .play-button;
+	width: 90px;
+	height: 90px;
+	font-size: 1em;
+	background: #CC0000;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+	border-color: black 9px;
+	
 }
 
 .play-button-options {

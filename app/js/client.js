@@ -89,6 +89,9 @@ module.exports = function(app) {
 	});
 
 	$scope.saveSong = function() {
+		var currUser = $('#currUser').html();
+		alert(currUser);
+	
 		if(!$scope.currentUser) {
 			alert('Must be logged in to save songs.');
 		} else {
@@ -197,9 +200,9 @@ module.exports = function(app) {
 				}
 				var name = $scope.setNoteClass2(note);  
 				//changes text color of specific note being played
-				angular.element('.' + test + '.'+name).css('color', 'black');
+				angular.element('.' + test + '.' + name).css('color', 'black');
 				setTimeout(function() {
-					angular.element('.' + test + '.'+name).css('color', 'white');
+					angular.element('.' + test + '.' + name).css('color', 'white');
 				}, 140);
 				$scope.playBackNote(note.name);
 			}, note.time);
