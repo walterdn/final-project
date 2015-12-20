@@ -1,11 +1,10 @@
 require('angular/angular');
 var angular = window.angular;
 var BufferLoader = require('./buffer-loader');
-
+var helper = require('./helper');
 
 module.exports = function(app) {
 	app.controller('MusicController', ['$scope', '$http', function($scope, $http) {
-	var startTime;
 	var keys = [
 		{name: 'A Major', notes: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#']},
 		{name: 'B Flat Major', notes: ['A#', 'C', 'D', 'D#', 'F', 'G', 'A']},
@@ -25,7 +24,7 @@ module.exports = function(app) {
 		{name: 'c maj', notes: ['C', 'E', 'G']},
 		{name: 'c min', notes: ["C", "D#", "G"]},
 		{name: 'c sharp maj', notes: ["C#", "F", "G#"]},
-		{name: 'c sharp min', notes: ["C#", "E", "G#"]},
+		{name: 'c sharp min', notes: ["C#", "E", "G#"]},	
 		{name: 'd maj', notes: ["D", "F#", "A"]},
 		{name: 'd min', notes: ["D", "F", "A"]},
 		{name: 'e flat maj', notes: ["D#", "G", "A#"]},
@@ -53,8 +52,21 @@ module.exports = function(app) {
 	$scope.allowedNotes = [];
 	$scope.allowedChords = [];
 	$scope.chosenChords = [];
-
 	$scope.melody = [];
+
+	$scope.loadASong = function() {
+		$scope.reset();
+		var song = ($scope.songLoader());
+		if (song) {
+			$scope.chosenChords = song.chords;
+			$scope.melody = song.melody;
+			filter();
+			$scope.inProgress = true;
+			$scope.$apply();
+		}
+	};
+	
+	var startTime;
 	var recording = false;
 	$scope.recordingNext = false;
 
@@ -81,14 +93,30 @@ module.exports = function(app) {
 		alert(currUser);
 	};
 
-	function removeSpaces (str){
-		return str.replace(/\s/g, '').toLowerCase();
-	};
+		if(!$scope.currentUser) {
+			alert('Must be logged in to save songs.');
+		} else {
+			var songName = prompt("Name your masterpiece:", "");
+ 		  if (songName != null) {
+	 		  var successCb = function(res) {
+	        console.log('Song saved.')
+	      };
+	      var errorCb = function(err) {
+	        console.log('Save failed.');   
+	      };
+	      var req = {
+	        method: 'POST',
+	        url:'/api/savesong/',
+	        data: {	name: songName, 
+	        				composer: $scope.currentUser, 
+	        				chords: $scope.chosenChords, 
+	        				melody: $scope.melody
+	        			}
+	      };
 
-	function changeName(str){
-		//find a # in a note name and replace it with shrp
-		str = str.replace("#", "shrp").toLowerCase();
-		return str;
+	      $http(req).then(successCb, errorCb);
+		  }
+		}
 	};
 
 	$scope.finishedLoading = function(bufferList) {
@@ -102,11 +130,11 @@ module.exports = function(app) {
 
 
 	$scope.playChord = function(chord){
-		var nameInPath = removeSpaces(chord.name);
+		var name = helper.removeSpaces(chord.name);
 		bufferLoader = new BufferLoader(
         context,
         [
-        "chords/" + nameInPath + ".wav"
+        "chords/" + name + ".wav"
         ],
         $scope.finishedLoading
     );
@@ -114,7 +142,7 @@ module.exports = function(app) {
     bufferLoader.load();
 	}; 
 
-	$scope.playNote = function(noteName){
+	$scope.playNote = function(note){
 	  if (recording) {
 	  	var msFromStart = Math.round(new Date() - startTime);
 	  	var distance = parseFloat(msFromStart/44).toFixed(2).toString() + '%';
@@ -125,7 +153,7 @@ module.exports = function(app) {
 			});
 			$scope.$apply();
 		}
-		var name = changeName(noteName);
+		var name = helper.changeName(note);
 			bufferLoader = new BufferLoader(
 	        context,
 	        [
@@ -142,8 +170,8 @@ module.exports = function(app) {
 				}, 140);
 	};
 
-	$scope.playBackNote = function(noteName){
-		var name = changeName(noteName);
+	$scope.playBackNote = function(note){
+		var name = helper.changeName(note);
 			bufferLoader = new BufferLoader(
 	        context,
 	        [
@@ -163,10 +191,6 @@ module.exports = function(app) {
 		$scope.melody = [];
 	};
 
-	$scope.clearChords = function() {
-		$scope.chosenChords = [];
-	};
-
 	function playMelody() {
 		$scope.melody.forEach(function(note) {
 			setTimeout(function() {
@@ -175,7 +199,7 @@ module.exports = function(app) {
 				if(test.length > 1){
 					test = test.charAt(0); 
 				}
-				var name = $scope.newNote(note);  
+				var name = $scope.setNoteClass2(note);  
 				//changes text color of specific note being played
 				angular.element('.' + test + '.' + name).css('color', 'black');
 				setTimeout(function() {
@@ -222,29 +246,6 @@ module.exports = function(app) {
 		}
 	};
 
-	$scope.assignClassName = function(string) { //if input is string 'g sharp min', returns string 'gmin'
-		string = string.toLowerCase();
-		var className = string.charAt(0); //this shortened string is used as a class name for coloring purposes
-		if (string.indexOf('maj') != -1) className += 'maj';
-		if (string.indexOf('min') != -1) className += 'min';
-		return className;
-	}
-
-	$scope.setNoteClass = function(string){
-		string = string.toLowerCase();
-		if(string.length > 1){
-			string = string.charAt(0) + "shrp"; 
-		}
-		string += 'note'; 
-		return string; 
-	}
-
-	$scope.newNote = function(note){
-		var rename = note.name[0] + note.time; 
-		return rename; 
-
-	}
-
 	$scope.swapPositions = function(index, chord) { //swap position of two chords when you drag a chord onto another chord
 		if (chord.chosen) {
 			var otherChord = $scope.chosenChords[index];
@@ -262,9 +263,7 @@ module.exports = function(app) {
 			if (!chord.chosen) {
 				chord.chosen = true;
 				$scope.chosenChords.push(chord);
-				filterKeys();
-				filterNotes();
-				filterChords();
+				filter();
 			}
 		}
 	};
@@ -273,11 +272,37 @@ module.exports = function(app) {
 		chord.chosen = false;
 		var index = $scope.chosenChords.indexOf(chord);
 		$scope.chosenChords.splice(index, 1);
+		filter();
+		if ($scope.chosenChords.length == 0) $scope.reset();
+	};
+
+
+	$scope.reset = function() { //resets to initial state
+		$scope.inProgress = false;
+		$scope.allowedKeys = [];
+		$scope.allowedNotes = [];
+		$scope.allowedChords = [];
+		$scope.chosenChords = [];
+		$scope.melody = [];
+
+		$scope.initializeKeys();
+	};
+
+	$scope.initializeKeys = function() { //initial population of allowed keys
+		if ($scope.chosenChords.length == 0) {
+			$scope.allowedKeys = [];
+			keys.forEach(function(key) {
+				$scope.allowedKeys.push(key)
+			});
+		}
+	};
+
+	function filter() {
 		filterKeys();
 		filterNotes();
 		filterChords();
-		if ($scope.chosenChords.length == 0) $scope.inProgress = false;
-	};
+	}
+
 
 	function filterKeys() { //renders available keys based on chosenChords
 		var notesUsed = []; //notes used in your chosen chords
@@ -287,7 +312,7 @@ module.exports = function(app) {
 		notesUsed = [].concat.apply([], notesUsed); //flattens array
 		$scope.allowedKeys = [];
 		keys.forEach(function(key) {
-			if (isArrayContained(notesUsed, key.notes)) {
+			if (helper.isArrayContained(notesUsed, key.notes)) {
 				$scope.allowedKeys.push(key);
 			} 
 		});
@@ -306,7 +331,7 @@ module.exports = function(app) {
 	function filterChords() { //renders available chords based on chosenChords
 		$scope.allowedChords = [];
 		$scope.chords.forEach(function(chord) {
-			if (isArrayContained(chord.notes, $scope.allowedNotes)) {
+			if (helper.isArrayContained(chord.notes, $scope.allowedNotes)) {
 				if ($scope.chosenChords.indexOf(chord) == -1) {
 					chord.chosen = false;
 					$scope.allowedChords.push(chord);
@@ -315,30 +340,27 @@ module.exports = function(app) {
 		});
 	}
 
-	function isArrayContained(inner, outer) { //helper func for filter functions. checks if an array is entirely contained in another
-		for(i=0; i<inner.length; i++) {
-			if (outer.indexOf(inner[i]) == -1) return false;
-		}
-		return true;
+	$scope.assignClassName = function(string) { //if input is string 'g sharp min', returns string 'gmin'
+		string = string.toLowerCase();
+		var className = string.charAt(0); //this shortened string is used as a class name for coloring purposes
+		if (string.indexOf('maj') != -1) className += 'maj';
+		if (string.indexOf('min') != -1) className += 'min';
+		return className;
 	}
 
-	$scope.reset = function() { //resets to initial state
-		$scope.inProgress = false;
-		$scope.allowedKeys = [];
-		$scope.allowedNotes = [];
-		$scope.allowedChords = [];
-		$scope.chosenChords = [];
+	$scope.setNoteClass = function(string){
+		string = string.toLowerCase();
+		if(string.length > 1){
+			string = string.charAt(0) + "shrp"; 
+		}
+		string += 'note'; 
+		return string; 
+	}
 
-		$scope.initializeKeys();
-	};
-
-	$scope.initializeKeys = function() { //initial population of allowed keys
-		$scope.allowedKeys = [];
-		keys.forEach(function(key) {
-			$scope.allowedKeys.push(key)
-		});
-	};
-
+	$scope.setNoteClass2 = function(note){
+		var rename = note.name[0] + note.time; 
+		return rename; 
+	}
 
 //end of main song app controller body
 }]);

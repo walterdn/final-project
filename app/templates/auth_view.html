@@ -1,5 +1,5 @@
 <section id="authSection" data-ng-cloak>
-  <h1 id="authH1">Welcome to Song Director</h1>
+  <h1 id="authH1">Song Director</h1>
   <h2 id="authH2">{{headingText}}</h2>
   <form name="authForm" data-ng-submit="authenticate(user)">
     <div id ="user">
@@ -10,11 +10,14 @@
       <label id="password" for="password">Password:</label>
       <input type="password" id="password" required data-ng-model="user.password">
     </div>
-    <button class="centerButtons" id="submit" type="submit" data-ng-disabled="authForm.$invalid">{{buttonText}}</button>
+    <div class="centerButtons">
+      <button id="submit" type="submit" data-ng-disabled="authForm.$invalid">{{buttonText}}</button>
+      <button id="swap" type="button" data-ng-click="changePlaces()">{{userRelation}}</button>
+    </div>
   </form>
-
-
-    <button class="centerButtons" id="swap" type="button" data-ng-click="changePlaces()">{{userRelation}}</button>
+  <div class="makeSong">
+    <button id="makeSongButton" data-ng-click="makeSong()">Create a Song</button>
+  </div>
 </section>
 
 

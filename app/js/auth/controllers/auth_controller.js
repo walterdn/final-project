@@ -1,5 +1,6 @@
 module.exports = function(app) {
   app.controller('AuthController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
+    
     $scope.getUser = function() {
       $scope.token = $cookies.get('token');
       $http.defaults.headers.common.token = $scope.token;
@@ -16,6 +17,11 @@ module.exports = function(app) {
       $scope.currentUser = null;
       $cookies.remove('token');
       $location.path('/signin');
+    };
+
+    $scope.songLoader = function(song) {
+      if(song) $scope.loadThisSong = song;
+      else return $scope.loadThisSong;
     };
   }]);
 };

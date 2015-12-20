@@ -8,14 +8,10 @@
 <body data-ng-app="SongWriterApp" data-ng-cloak>
   <div data-ng-controller="AuthController" data-ng-init="getUser()">
     <a data-ng-if="currentUser" href data-ng-click="logOut()" id="currUser">Log Out of {{currentUser}}</a>
+    <button class="viewSongs" data-ng-if"currentUser" data-ng-click="viewSongs()"></button>
     <main data-ng-view></main>
   </div>
   <script src='https://code.jquery.com/jquery-1.9.1.min.js'></script>
   <script src="/js/bundle.js"></script>
-
-
-
-</div>
 </body>
-
 </html>

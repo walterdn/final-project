@@ -1,60 +1,52 @@
+<section ng-init="loadASong();">
+
 <div> Allowed Keys: </div>
-      <section id="allowed-keys-container" ng-init="initializeKeys()">
-        <div class="keys" ng-repeat="key in allowedKeys">
-          {{key.name}}
-        </div>
-      </section>
+<section id="allowed-keys-container" ng-init="initializeKeys()">
+  <div class="keys" ng-repeat="key in allowedKeys">
+    {{key.name}}
+  </div>
+</section>
 
-      <div ng-if="!inProgress">
-        <div> All Chords: </div>
-        <div id="all-chords-container">
-          <div class="all-chords" ng-repeat="chord in chords"
-               ng-click="playChord(chord)"
-               ng-drag="true" ng-drag-data="chord">
-            {{chord.name}}
-          </div>
-        </div>
-      </div>
+<div ng-if="!inProgress">
+  <div> All Chords: </div>
+  <div id="all-chords-container">
+    <div class="all-chords" ng-repeat="chord in chords"
+         ng-click="playChord(chord)"
+         ng-drag="true" ng-drag-data="chord">
+      {{chord.name}}
+    </div>
+  </div>
+</div>
 
-      <div ng-if="inProgress">
-        <div> Allowed Notes: </div>
-        <div id="allowed-notes-container">
-          <div class="allowed-notes" ng-repeat="note in allowedNotes"
-               ng-click="playNote(note)" ng-drag="true" ng-drag-data="note"
-               ng-class="setNoteClass(note)">
-            {{note}}
-          </div>
-        </div>
+<div ng-if="inProgress">
+  <div> Allowed Notes: </div>
+  <div id="allowed-notes-container">
+    <div class="allowed-notes" ng-repeat="note in allowedNotes"
+         ng-click="playNote(note)" ng-class="setNoteClass(note)">
+      {{note}}
+    </div>
+</div>
 
-        <div> Allowed Chords: </div>
-        <div id="allowed-chords-container">
-          <div class="allowed-chords" ng-repeat="chord in allowedChords"
-               ng-click="playChord(chord)"
-               ng-drag="true" ng-drag-data="chord">
-            {{chord.name}}
-          </div>
-        </div>
-      </div>
+<div> Allowed Chords: </div>
+  <div id="allowed-chords-container">
+    <div class="allowed-chords" ng-repeat="chord in allowedChords"
+         ng-click="playChord(chord)"
+         ng-drag="true" ng-drag-data="chord">
+      {{chord.name}}
+    </div>
+  </div>
+</div>
 
-      <div> Chosen Chords: </div>
-      <div id="chosen-chords-container" ng-drop="true" ng-drop-success="addChord($data)">
-        <div ng-repeat="chord in chosenChords track by $index"
-             ng-drop="true" ng-drop-success="swapPositions($index, $data)"
-             ng-drag="true" ng-drag-data="chord"
-             ng-click="playChord(chord)" ng-dblclick="removeChord(chord)"
-             ng-class="assignClassName(chord.name)" class="chosen-chords">
-          {{chord.name}}
-        </div>
-      </div>
-
-      <div> Chosen Notes: </div>
-      <div id="chosen-notes-container">
-        <div ng-repeat="note in melody track by $index" 
-             class="chosen-notes" ng-class="[assignClassName(note.name), newNote(note)]"
-             ng-style="{'left':'{{note.distance}}'}">
-          {{note.name}} 
-        </div>
-      </div>
+<div> Chosen Chords: </div>
+<div id="chosen-chords-container" ng-drop="true" ng-drop-success="addChord($data)">
+  <div ng-repeat="chord in chosenChords track by $index"
+       ng-drop="true" ng-drop-success="swapPositions($index, $data)"
+       ng-drag="true" ng-drag-data="chord"
+       ng-click="playChord(chord)" ng-dblclick="removeChord(chord)"
+       ng-class="assignClassName(chord.name)" class="chosen-chords">
+    {{chord.name}}
+  </div>
+</div>
 
       <div class="play-button-container" ng-if="inProgress">
       <div class="play-record-controls" ng-if="inProgress">
@@ -67,8 +59,24 @@
           <button ng-click="clearChords()">clear chords</button>
           <button ng-click="saveSong()"> Save this song! </button>
 
-        </div>
-        <div data-ng-controller="AuthController" data-ng-init="getUser()">
-    <a data-ng-if="currentUser" href data-ng-click="logOut()">Log Out of {{currentUser}}</a>
+<div> Chosen Notes: </div>
+<div id="chosen-notes-container">
+  <div ng-repeat="note in melody track by $index" 
+       class="chosen-notes" ng-class="[assignClassName(note.name), setNoteClass2(note)]"
+       ng-style="{'left':'{{note.distance}}'}">
+    {{note.name}} 
   </div>
-      </div>
+</div>
+
+<div class="play-button-container" ng-if="inProgress">
+  <button class="play-button" ng-click="playSong()">Play</button>
+  <div class="play-button-options">
+    <label>loop this many times</label><input id="loopNumber" type="number" min="1" max="4" value="1">
+    <button ng-click="reset()">clear all</button>
+    <button ng-click="clearMelody()">clear melody</button>
+    <button ng-if="!recordingNext" ng-click="toggleRecording()">record next play</button>
+    <button ng-click="saveSong()"> Save this song! </button>
+  </div>
+</div>
+
+</section>
