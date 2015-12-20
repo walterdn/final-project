@@ -4,7 +4,7 @@ var BufferLoader = require('./buffer-loader');
 var helper = require('./helper');
 
 module.exports = function(app) {
-	app.controller('MusicController', ['$scope', '$http', function($scope, $http) {
+	app.controller('MusicController', ['$scope', '$http', '$location', function($scope, $http, $location) {
 	var keys = [
 		{name: 'A Major', notes: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#']},
 		{name: 'B Flat Major', notes: ['A#', 'C', 'D', 'D#', 'F', 'G', 'A']},
@@ -65,6 +65,11 @@ module.exports = function(app) {
 			$scope.$apply();
 		}
 	};
+
+	$scope.viewSongs2 = function() {
+		$scope.reset();
+		$location.path('/savedsongs');
+	};
 	
 	var startTime;
 	var recording = false;
@@ -89,9 +94,7 @@ module.exports = function(app) {
 	});
 
 	$scope.saveSong = function() {
-		var currUser = $('#currUser').html();
-		alert(currUser);
-	
+			
 		if(!$scope.currentUser) {
 			alert('Must be logged in to save songs.');
 		} else {
@@ -185,10 +188,6 @@ module.exports = function(app) {
 	$scope.toggleRecording = function() {
 		$scope.recordingNext = true;
 	}
-
-	$scope.clearMelody = function() { //clears melody
-		$scope.melody = [];
-	};
 
 	function playMelody() {
 		$scope.melody.forEach(function(note) {

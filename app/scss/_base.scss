@@ -228,7 +228,7 @@ div {
   justify-content: center;
 }
 
-#makeSongButton {
+.songButton {
   text-align: center;
    background: #000080;
    color: white;
@@ -237,7 +237,7 @@ div {
    text-decoration: none;
 }
 
-#makeSongButton:hover {
+.songButton:hover {
   cursor: pointer;
   background: #0000F0
 }
