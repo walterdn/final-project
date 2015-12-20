@@ -17,5 +17,11 @@ module.exports = function(app) {
     $scope.changePlaces = function() {
       $location.path('/signin');
     };
+    $scope.makeSong = function() {
+      $location.path('/songs');
+    };
+    $scope.viewSongs = function() {
+      $location.path('/savedsongs');
+    };
   }]);
 };
