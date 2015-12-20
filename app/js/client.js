@@ -86,7 +86,7 @@ module.exports = function(app) {
 	};
 
 	function changeName(str){
-		//find a # in the name and replace it with shrp
+		//find a # in a note name and replace it with shrp
 		str = str.replace("#", "shrp").toLowerCase();
 		return str;
 	};
@@ -102,11 +102,11 @@ module.exports = function(app) {
 
 
 	$scope.playChord = function(chord){
-		var name = removeSpaces(chord.name);
+		var nameInPath = removeSpaces(chord.name);
 		bufferLoader = new BufferLoader(
         context,
         [
-        "chords/" + name + ".wav"
+        "chords/" + nameInPath + ".wav"
         ],
         $scope.finishedLoading
     );
@@ -114,18 +114,18 @@ module.exports = function(app) {
     bufferLoader.load();
 	}; 
 
-	$scope.playNote = function(note){
+	$scope.playNote = function(noteName){
 	  if (recording) {
 	  	var msFromStart = Math.round(new Date() - startTime);
 	  	var distance = parseFloat(msFromStart/44).toFixed(2).toString() + '%';
 			$scope.melody.push({
-				name: note,
+				name: noteName,
 				time: msFromStart,
 				distance: distance
 			});
 			$scope.$apply();
 		}
-		var name = changeName(note);
+		var name = changeName(noteName);
 			bufferLoader = new BufferLoader(
 	        context,
 	        [
@@ -142,8 +142,8 @@ module.exports = function(app) {
 				}, 140);
 	};
 
-	$scope.playBackNote = function(note){
-		var name = changeName(note);
+	$scope.playBackNote = function(noteName){
+		var name = changeName(noteName);
 			bufferLoader = new BufferLoader(
 	        context,
 	        [
@@ -177,9 +177,9 @@ module.exports = function(app) {
 				}
 				var name = $scope.newNote(note);  
 				//changes text color of specific note being played
-				angular.element('.' + test + '.'+name).css('color', 'black');
+				angular.element('.' + test + '.' + name).css('color', 'black');
 				setTimeout(function() {
-					angular.element('.' + test + '.'+name).css('color', 'white');
+					angular.element('.' + test + '.' + name).css('color', 'white');
 				}, 140);
 				$scope.playBackNote(note.name);
 			}, note.time);
