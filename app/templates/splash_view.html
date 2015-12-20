@@ -1,0 +1,10 @@
+<div ng-if="!inProgress">
+  <div> All Chords: </div>
+    <div id="all-chords-container">
+    <div class="all-chords" ng-repeat="chord in chords"
+    ng-click="playChord(chord)"
+    ng-drag="true" ng-drag-data="chord">
+    {{chord.name}}
+    </div>
+  </div>
+</div>
