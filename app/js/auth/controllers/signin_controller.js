@@ -19,9 +19,14 @@ module.exports = function(app) {
         console.log(err);
       });
     };
-
     $scope.changePlaces = function() {
       $location.path('/signup');
+    };
+    $scope.makeSong = function() {
+      $location.path('/songs');
+    };
+    $scope.viewSongs = function() {
+      $location.path('savedsongs');
     };
   }]);
 };
