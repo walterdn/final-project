@@ -91,8 +91,7 @@ module.exports = function(app) {
 	$scope.saveSong = function() {
 		var currUser = $('#currUser').html();
 		alert(currUser);
-	};
-
+	
 		if(!$scope.currentUser) {
 			alert('Must be logged in to save songs.');
 		} else {
@@ -147,7 +146,7 @@ module.exports = function(app) {
 	  	var msFromStart = Math.round(new Date() - startTime);
 	  	var distance = parseFloat(msFromStart/44).toFixed(2).toString() + '%';
 			$scope.melody.push({
-				name: noteName,
+				name: note,
 				time: msFromStart,
 				distance: distance
 			});

@@ -48,6 +48,15 @@
   </div>
 </div>
 
+<div> Chosen Notes: </div>
+<div id="chosen-notes-container">
+  <div ng-repeat="note in melody track by $index" 
+       class="chosen-notes" ng-class="[assignClassName(note.name), setNoteClass2(note)]"
+       ng-style="{'left':'{{note.distance}}'}">
+    {{note.name}} 
+  </div>
+</div>
+
       <div class="play-button-container" ng-if="inProgress">
       <div class="play-record-controls" ng-if="inProgress">
         <button class="play-button" ng-click="playSong()">Play</button>
@@ -58,25 +67,5 @@
           <button ng-click="clearMelody()">clear melody</button>
           <button ng-click="clearChords()">clear chords</button>
           <button ng-click="saveSong()"> Save this song! </button>
-
-<div> Chosen Notes: </div>
-<div id="chosen-notes-container">
-  <div ng-repeat="note in melody track by $index" 
-       class="chosen-notes" ng-class="[assignClassName(note.name), setNoteClass2(note)]"
-       ng-style="{'left':'{{note.distance}}'}">
-    {{note.name}} 
-  </div>
-</div>
-
-<div class="play-button-container" ng-if="inProgress">
-  <button class="play-button" ng-click="playSong()">Play</button>
-  <div class="play-button-options">
-    <label>loop this many times</label><input id="loopNumber" type="number" min="1" max="4" value="1">
-    <button ng-click="reset()">clear all</button>
-    <button ng-click="clearMelody()">clear melody</button>
-    <button ng-if="!recordingNext" ng-click="toggleRecording()">record next play</button>
-    <button ng-click="saveSong()"> Save this song! </button>
-  </div>
-</div>
 
 </section>
