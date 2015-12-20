@@ -15,7 +15,7 @@ songsRouter.get('/allsongs', function(req, res) {
   });
 });
 
-songsRouter.post('/savesong', bodyParser, function(req, res) {
+songsRouter.post('/songs', eatAuth, function(req, res) {
   var newSong = new Song(req.body);
   newSong.save(function(err, data) {
     if (err) return handleError(err, res);
