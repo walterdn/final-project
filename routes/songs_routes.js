@@ -15,7 +15,16 @@ songsRouter.get('/allsongs', function(req, res) {
   });
 });
 
-songsRouter.post('/songs', eatAuth, function(req, res) {
+
+songsRouter.get('/savedsongs/:username', function (req, res) {
+  Song.find({composer : req.params.username}, function(err, data) {
+    if (err) return handleError(err, res); 
+
+    res.json(data);
+  });
+});
+
+songsRouter.post('/savesong', bodyParser, function(req, res) {
   var newSong = new Song(req.body);
   newSong.save(function(err, data) {
     if (err) return handleError(err, res);
@@ -23,17 +32,6 @@ songsRouter.post('/songs', eatAuth, function(req, res) {
     res.json(data);
   });
 });
-
-songsRouter.put('/songs/:id', eatAuth, function(req, res) {
-  var songData = req.body;
-  delete songData._id;
-  Song.update({_id: req.params.id}, songData, function(err) {
-    if (err) return handleError(err, res);
-
-    res.json({msg: 'Song Updated'});
-  });
-});
-
 
 songsRouter.delete('/songs/:id', eatAuth, function(req, res) {
   Song.remove({_id: req.params.id}, function(err) {
