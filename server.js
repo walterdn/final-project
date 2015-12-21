@@ -7,7 +7,7 @@ var authRouter = require(__dirname + '/routes/auth_routes');
 
 process.env.APP_SECRET = process.env.APP_SECRET || 'hello';
 
-mongoose.connect('mongodb://heroku_dh1ztl0r:hae5nmcsuh3tteoi3i1r0cd6kn@ds033875.mongolab.com:33875/heroku_dh1ztl0r' || process.env.MONGOLAB_URI );
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/song_app');
 
 app.use(express.static(__dirname + '/build'));
 
