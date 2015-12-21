@@ -16,7 +16,7 @@ gulp.task('cssFiles:dev', function() {
 });
 
 gulp.task('webpack:test', function() {
-  return gulp.src('/test/client/test_entry.js')
+  return gulp.src('test/client/test_entry.js')
     .pipe(webpack({
       output: {
         filename: 'test_bundle.js'
@@ -26,7 +26,7 @@ gulp.task('webpack:test', function() {
 });
 
 gulp.task('servertests', function() {
-  return gulp.src('/test/server/**/*tests.js')
+  return gulp.src('./test/server/**/*tests.js')
     .pipe(mocha({reporter: 'nyan'}))
     .once('error', function() {
       process.exit();
@@ -47,5 +47,5 @@ gulp.task('jsFiles:dev', function() {
   .pipe(gulp.dest('build/js/'));
 });
 
-gulp.task('build:dev', ['jsFiles:dev', 'htmlFiles:dev', 'cssFiles:dev']);
+gulp.task('build:dev', ['jsFiles:dev', 'htmlFiles:dev', 'cssFiles:dev', 'servertests']);
 gulp.task('default', ['build:dev']);
