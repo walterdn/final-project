@@ -1,4 +1,6 @@
-<section ng-init="loadASong();">
+<a data-ng-if="currentUser" href data-ng-click="logOut()" id="currUser">Log Out of {{currentUser}}</a>
+
+<section ng-init="loadASong()">
 
 <div> Allowed Keys: </div>
 <section id="allowed-keys-container" ng-init="initializeKeys()">

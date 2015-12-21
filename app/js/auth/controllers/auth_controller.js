@@ -12,13 +12,6 @@ module.exports = function(app) {
       });
     };
 
-    $scope.logOut = function() {
-      $scope.token = null;
-      $scope.currentUser = null;
-      $cookies.remove('token');
-      $location.path('/signin');
-    };
-
     $scope.songLoader = function(song) {
       if(song) $scope.loadThisSong = song;
       else return $scope.loadThisSong;
