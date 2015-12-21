@@ -93,7 +93,7 @@ module.exports = function(app) {
         "notes/fshrp.wav",
         "notes/g.wav",
         "notes/gshrp.wav"
-        ], function() {
+        ], function(bufferList) {
         	var sound = context.createBufferSource();
     			sound.buffer = bufferList[0];
     			sound.connect(context.destination);
