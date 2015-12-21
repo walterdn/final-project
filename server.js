@@ -9,7 +9,7 @@ process.env.APP_SECRET = process.env.APP_SECRET || 'hello';
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/song_app');
 
-app.use(express.static(__dirname + '/build'));
+app.use(express.static(__dirname + '/public'));
 
 app.use('/api', authRouter);
 app.use('/api', songsRouter);
