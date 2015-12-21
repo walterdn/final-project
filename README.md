@@ -2,7 +2,7 @@
 
 <img src="https://travis-ci.org/walterdn/final-project.svg">
 
-Welcome to Song Maker, where anyone can create a melodious jam.
+<em>Welcome to Song Maker, where anyone can create a melodious jam.</em>
 
 <h2>Getting Started</h2>
 * Create an account <strong>or</strong> login to ensure your songs get saved to the global catalog.
