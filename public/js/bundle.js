@@ -164,6 +164,68 @@
 			{name: 'b min', notes: ["B", "D", "F#"]}
 		];
 
+		$scope.context; 
+		$scope.bufferLoader;
+		context = new AudioContext();
+
+		$scope.finishedInitialLoading = function(bufferList) {
+	    //Create source for audio context
+	    var sound = context.createBufferSource();
+	    sound.buffer = bufferList[0];
+	    sound.connect(context.destination);
+	  	//Play g
+	    //sound.start(0);
+		};
+
+		$scope.loadSounds = function(){
+			bufferLoader = new BufferLoader(
+	        context,
+	        [
+	        "chords/amaj.wav",
+	        "chords/amin.wav",
+	        "chords/bflatmaj.wav",
+	        "chords/bflatmin.wav",
+	        "chords/bmaj.wav",
+	        "chords/bmin.wav",
+	        "chords/cmaj.wav",
+	        "chords/cmin.wav",
+	        "chords/csharpmaj.wav",
+	        "chords/csharpmin.wav",
+	        "chords/dmaj.wav",
+	        "chords/dmin.wav",
+	        "chords/eflatmaj.wav",
+	        "chords/eflatmin.wav",
+	        "chords/emaj.wav",
+	        "chords/emin.wav",
+	        "chords/fmaj.wav",
+	        "chords/fmin.wav",
+	        "chords/fsharpmaj.wav",
+	        "chords/fsharpmin.wav",
+	        "chords/gmaj.wav",
+	        "chords/gmin.wav",
+	        "chords/gsharpmaj.wav",
+	        "chords/gsharpmin.wav",
+	        "notes/a.wav",
+	        "notes/ashrp.wav",
+	        "notes/b.wav",
+	        "notes/c.wav",
+	        "notes/cshrp.wav",
+	        "notes/d.wav",
+	        "notes/dshrp.wav",
+	        "notes/e.wav",
+	        "notes/f.wav",
+	        "notes/fshrp.wav",
+	        "notes/g.wav",
+	        "notes/gshrp.wav"
+	        ],
+	        $scope.finishedInitialLoading
+	    );
+
+	    bufferLoader.load();
+		}
+
+		$scope.loadSounds(); 
+
 		$scope.inProgress = false;
 		$scope.allowedKeys = [];
 		$scope.allowedNotes = [];
@@ -200,9 +262,6 @@
 		var recording = false;
 		$scope.recordingNext = false;
 
-		$scope.context; 
-		$scope.bufferLoader;
-		context = new AudioContext();
 
 		$(window).keypress(function(e) {
 			if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);
@@ -251,7 +310,7 @@
 	    var sound = context.createBufferSource();
 	    sound.buffer = bufferList[0];
 	    sound.connect(context.destination);
-	  	//Play 
+	  	//Play g
 	    sound.start(0);
 		};
 
