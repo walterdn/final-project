@@ -1,6 +1,9 @@
 {
   "name": "songwriter",
   "version": "0.1.0",
+  "engines": {
+    "node": "0.12.7"
+  },
   "description": "an app which helps you write songs",
   "main": "server.js",
   "scripts": {
