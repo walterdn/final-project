@@ -7,7 +7,7 @@
   "description": "an app which helps you write songs",
   "main": "server.js",
   "scripts": {
-    "test": "gulp servertests"
+    "test": "gulp"
   },
   "author": "",
   "license": "ISC",
