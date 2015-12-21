@@ -1,10 +1,10 @@
 <button class="buttons" ng-if="currentUser" ng-click="logOut()" id="logOut">log out of {{currentUser}}</button>
+<h1 class="title" ng-if="!doneLoadingSounds"> loading...</h1>
 
 <section ng-init="loadASong()">
 <section ng-if="doneLoadingSounds">
 
 <h1 class="title">so<span class="mainColor">ng</span>maker</h1>
-<h1 class="title" ng-if="!doneLoadingSounds"> loading...</h1>
 
 <section ng-if="!inProgress">
   <div id="all-chords-container">
