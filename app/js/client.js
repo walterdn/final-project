@@ -4,7 +4,7 @@ var BufferLoader = require('./buffer-loader');
 var helper = require('./helper');
 
 module.exports = function(app) {
-	app.controller('MusicController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+	app.controller('MusicController', ['$scope', '$http', '$location', '$cookies', function($scope, $http, $location, $cookies) {
 	var keys = [
 		{name: 'A Major', notes: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#']},
 		{name: 'B Flat Major', notes: ['A#', 'C', 'D', 'D#', 'F', 'G', 'A']},
@@ -70,6 +70,14 @@ module.exports = function(app) {
 		$scope.reset();
 		$location.path('/savedsongs');
 	};
+
+	$scope.logOut = function() {
+		$scope.reset();
+    $scope.token = null;
+    $scope.currentUser = null;
+    $cookies.remove('token');
+    $location.path('/signin');
+  };
 	
 	var startTime;
 	var recording = false;
@@ -79,7 +87,7 @@ module.exports = function(app) {
 	$scope.bufferLoader;
 	context = new AudioContext();
 
-	$(document).keypress(function(e) {
+	$(window).keypress(function(e) {
 		if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);
 		if (e.which == 115) $scope.playNote($scope.allowedNotes[1]);
 		if (e.which == 100) $scope.playNote($scope.allowedNotes[2]);
