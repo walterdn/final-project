@@ -1,8 +1,8 @@
 module.exports = function(app) {
   app.controller('SignupController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
     $scope.headingText = 'sign up to create sweet jams';
-    $scope.buttonText = 'Sign up';
-    $scope.userRelation = 'Have an Account?'
+    $scope.buttonText = 'sign up';
+    $scope.userRelation = 'go to signin'
     $scope.authenticate = function(user) {
       $http.post('/api/signup', user)
         .then(function(res){
@@ -14,7 +14,7 @@ module.exports = function(app) {
         });
     };
 
-    $scope.changePlaces = function() {
+    $scope.switchAuthView = function() {
       $location.path('/signin');
     };
     $scope.makeSong = function() {

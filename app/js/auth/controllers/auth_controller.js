@@ -12,7 +12,7 @@ module.exports = function(app) {
       });
     };
 
-    $scope.songLoader = function(song) {
+    $scope.songLoader = function(song) { //gets set in save_songs_controller from the /savesongs view, and then called from in client.js from /songs view
       if(song) $scope.loadThisSong = song;
       else return $scope.loadThisSong;
     };

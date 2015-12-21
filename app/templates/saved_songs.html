@@ -1,6 +1,6 @@
 <section ng-init="getAll()">
-  <h1>The Definitive Song Book</h1>
-  <ul>
-    <li ng-repeat="song in songs"><button ng-click="loadSong(song)">{{song.name}} by {{song.composer}}</button></li>
-  </ul>
+  <div class="title"><span style="font-size:.45em">the definitive</span><br>so<span class="mainColor">ng</span>book</div>
+  <div class="saved-songs-container">
+    <div ng-repeat="song in songs"><button class="savedSongBtns" ng-click="loadSong(song)">{{song.name}} by {{song.composer}}</button></div>
+  </div>
 </section>
