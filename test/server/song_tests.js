@@ -33,7 +33,7 @@ describe('song routes', function() {
     it('should be able to create a song', function(done) {
       var songData = {name: 'test song', token: this.token};
       chai.request(url)
-      .post('/songs')
+      .post('/savesong')
       .send(songData)
       .end(function(err, res) {
         expect(err).to.eql(null);
@@ -64,17 +64,6 @@ describe('song routes', function() {
       }.bind(this));
     });
 
-    it('should be able to update a song', function(done) {
-      chai.request(url)
-      .put('/songs/' + this.song._id)
-      .send({chords: ['C','G','F', 'G'], token: this.token})
-      .end(function(err, res) {
-        expect(err).to.eql(null);
-        expect(res.body.msg).to.eql('Song Updated');
-        done();
-      });
-    });
-
     it('should be able to delete a song', function(done) {
       chai.request(url)
       .delete('/songs/' + this.song._id)
@@ -82,17 +71,6 @@ describe('song routes', function() {
       .end(function(err, res) {
         expect(err).to.eql(null);
         expect(res.body.msg).to.eql('Song Deleted');
-        done();
-      });
-    });
-
-    it('should disallow unauthorized changes', function(done) {
-      chai.request(url)
-      .put('/songs/' + this.song._id)
-      .send({chords: ['C','G','F', 'G']})
-      .end(function(err, res) {
-        expect(err).to.eql(null);
-        expect(res.error.text).to.eql('{"msg":"not allowed"}');
         done();
       });
     });
