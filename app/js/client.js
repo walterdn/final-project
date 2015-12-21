@@ -6,18 +6,18 @@ var helper = require('./helper');
 module.exports = function(app) {
 	app.controller('MusicController', ['$scope', '$http', '$location', '$cookies', function($scope, $http, $location, $cookies) {
 	var keys = [
-		{name: 'A Major', notes: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#']},
-		{name: 'B Flat Major', notes: ['A#', 'C', 'D', 'D#', 'F', 'G', 'A']},
-		{name: 'B Major', notes: ['B', 'C#', 'D#', 'E', 'F#', 'G#', 'A#']},
-		{name: 'C Major', notes: ['C', 'D', 'E', 'F', 'G', 'A', 'B']},
-		{name: 'C Sharp Major', notes: ['C#', 'D#', 'F', 'F#', 'G#', 'A#', 'C']},
-		{name: 'D Major', notes: ['D', 'E', 'F#', 'G', 'A', 'B', 'C#']},
-		{name: 'E Flat Major', notes: ['D#', 'F', 'G', 'G#', 'A#', 'C', 'D']},
-		{name: 'E Major', notes: ['E', 'F#', 'G#', 'A', 'B', 'C#', 'D#']},
-		{name: 'F Major', notes: ['F', 'G', 'A', 'A#', 'C', 'D', 'E']},
-		{name: 'F Sharp Major', notes: ['F#', 'G#', 'A#', 'B', 'C#', 'D#', 'F']},
-		{name: 'G Major', notes: ['G', 'A', 'B', 'C', 'D', 'E', 'F#']},
-		{name: 'G Sharp Major', notes: ['G#', 'A#', 'C', 'C#', 'D#', 'F', 'G']}
+		{name: 'A Major/F# Minor', notes: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#']},
+		{name: 'Bb Major/G Minor', notes: ['A#', 'C', 'D', 'D#', 'F', 'G', 'A']},
+		{name: 'B Major/G# Minor', notes: ['B', 'C#', 'D#', 'E', 'F#', 'G#', 'A#']},
+		{name: 'C Major/A Minor', notes: ['C', 'D', 'E', 'F', 'G', 'A', 'B']},
+		{name: 'C# Major/Bb Minor', notes: ['C#', 'D#', 'F', 'F#', 'G#', 'A#', 'C']},
+		{name: 'D Major/B Minor', notes: ['D', 'E', 'F#', 'G', 'A', 'B', 'C#']},
+		{name: 'Eb Major/C Minor', notes: ['D#', 'F', 'G', 'G#', 'A#', 'C', 'D']},
+		{name: 'E Major/C# Minor', notes: ['E', 'F#', 'G#', 'A', 'B', 'C#', 'D#']},
+		{name: 'F Major/D Minor', notes: ['F', 'G', 'A', 'A#', 'C', 'D', 'E']},
+		{name: 'F# Major/D# Minor', notes: ['F#', 'G#', 'A#', 'B', 'C#', 'D#', 'F']},
+		{name: 'G Major/E Minor', notes: ['G', 'A', 'B', 'C', 'D', 'E', 'F#']},
+		{name: 'G# Major/F Minor', notes: ['G#', 'A#', 'C', 'C#', 'D#', 'F', 'G']}
 	];
 
 	$scope.chords = [
@@ -50,17 +50,10 @@ module.exports = function(app) {
 	$scope.context; 
 	$scope.bufferLoader;
 	context = new AudioContext();
+	$scope.doneLoadingSounds = false;
 
-	$scope.finishedInitialLoading = function(bufferList) {
-    //Create source for audio context
-    var sound = context.createBufferSource();
-    sound.buffer = bufferList[0];
-    sound.connect(context.destination);
-  	//Play g
-    //sound.start(0);
-	};
 
-	$scope.loadSounds = function(){
+	$scope.loadSounds = function(){ //loads all sounds into buffer on pageload
 		bufferLoader = new BufferLoader(
         context,
         [
@@ -100,8 +93,10 @@ module.exports = function(app) {
         "notes/fshrp.wav",
         "notes/g.wav",
         "notes/gshrp.wav"
-        ],
-        $scope.finishedInitialLoading
+        ], function() {
+        	$scope.doneLoadingSounds = true;
+        	$scope.$apply();
+        }
     );
 
     bufferLoader.load();
@@ -116,9 +111,13 @@ module.exports = function(app) {
 	$scope.chosenChords = [];
 	$scope.melody = [];
 
-	$scope.loadASong = function() {
+	var startTime;
+	var recording = false;
+	$scope.recordingNext = false;
+
+	$scope.loadASong = function() { //loads a saved song
 		$scope.reset();
-		var song = ($scope.songLoader());
+		var song = ($scope.songLoader()); //comes from a global app variable stored in auth_controller.js
 		if (song) {
 			$scope.chosenChords = song.chords;
 			$scope.melody = song.melody;
@@ -128,7 +127,7 @@ module.exports = function(app) {
 		}
 	};
 
-	$scope.viewSongs2 = function() {
+	$scope.viewSongs = function() {
 		$scope.reset();
 		$location.path('/savedsongs');
 	};
@@ -140,14 +139,9 @@ module.exports = function(app) {
     $cookies.remove('token');
     $location.path('/signin');
   };
-	
-	var startTime;
-	var recording = false;
-	$scope.recordingNext = false;
 
-
-	$(window).keypress(function(e) {
-		if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);
+	$(window).keypress(function(e) { //plays notes upon keypresses of a, s, d, f, g, h, j, k, l, and space bar to play. 
+		if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);//breaks if you ever leave the main page then come back to it in the same session
 		if (e.which == 115) $scope.playNote($scope.allowedNotes[1]);
 		if (e.which == 100) $scope.playNote($scope.allowedNotes[2]);
 		if (e.which == 102) $scope.playNote($scope.allowedNotes[3]);
@@ -158,10 +152,13 @@ module.exports = function(app) {
 		if (e.which == 108) $scope.playNote($scope.allowedNotes[8]);
 		
 		if (e.which == 32) $scope.playSong();
+		if (e.which == 114)	{
+			$scope.toggleRecording();
+			$scope.$apply();
+		}
 	});
 
-	$scope.saveSong = function() {
-			
+	$scope.saveSong = function() { //saves your chord progression + melody to the database
 		if(!$scope.currentUser) {
 			alert('Must be logged in to save songs.');
 		} else {
@@ -188,17 +185,16 @@ module.exports = function(app) {
 		}
 	};
 
-	$scope.finishedLoading = function(bufferList) {
+	$scope.finishedLoading = function(bufferList) { //audio playing function
     //Create source for audio context
     var sound = context.createBufferSource();
     sound.buffer = bufferList[0];
     sound.connect(context.destination);
-  	//Play g
     sound.start(0);
 	};
 
 
-	$scope.playChord = function(chord){
+	$scope.playChord = function(chord){ //plays one chord sound
 		var name = helper.removeSpaces(chord.name);
 		bufferLoader = new BufferLoader(
         context,
@@ -211,7 +207,7 @@ module.exports = function(app) {
     bufferLoader.load();
 	}; 
 
-	$scope.playNote = function(note){
+	$scope.playNote = function(note){ //plays a single note, also records it to melody if you are recording
 	  if (recording) {
 	  	var msFromStart = Math.round(new Date() - startTime);
 	  	var distance = parseFloat(msFromStart/44).toFixed(2).toString() + '%';
@@ -233,13 +229,13 @@ module.exports = function(app) {
 
 	    bufferLoader.load();
 	    name +='note'
-	    angular.element('.' + name).css('background-color', '#FFC30D');
+	    angular.element('.' + name).css('background', '#ffbf00');
 				setTimeout(function() {
-					angular.element('.' + name).css('background-color', '#000080');
+					angular.element('.' + name).css('background', '#3a3a2c');
 				}, 140);
 	};
 
-	$scope.playBackNote = function(note){
+	$scope.playBackNote = function(note){ //plays back a note from your recorded melody
 		var name = helper.changeName(note);
 			bufferLoader = new BufferLoader(
 	        context,
@@ -252,11 +248,12 @@ module.exports = function(app) {
 	    bufferLoader.load();
 	};
 
-	$scope.toggleRecording = function() {
-		$scope.recordingNext = true;
+	$scope.toggleRecording = function() { //will record 4 bars of melody notes after the next time you hit play
+		if (!$scope.recordingNext) $scope.recordingNext = true;
+		else $scope.recordingNext = false;
 	}
 
-	function playMelody() {
+	function playMelody() { //plays your recorded melody
 		$scope.melody.forEach(function(note) {
 			setTimeout(function() {
 				var test = note.name; 
@@ -266,23 +263,23 @@ module.exports = function(app) {
 				}
 				var name = $scope.setNoteClass2(note);  
 				//changes text color of specific note being played
-				angular.element('.' + test + '.' + name).css('color', 'black');
+				angular.element('.' + test + '.' + name).css('border', '3px solid #ff9900');
 				setTimeout(function() {
-					angular.element('.' + test + '.' + name).css('color', 'white');
-				}, 140);
+					angular.element('.' + test + '.' + name).css('border', 'none');
+				}, 240);
 				$scope.playBackNote(note.name);
 			}, note.time);
 		});
 	}
 	
-	function playChords() {
+	function playChords() { //plays your chord progression
 		$scope.chosenChords.forEach(function(chord, index) {
 			setTimeout(function() {
 				var name = $scope.assignClassName(chord.name);
 
-				angular.element('.' + name).css('color', 'black');
+				angular.element('.' + name).css('border', '2px solid #ff9900');
 				setTimeout(function() {
-					angular.element('.' + name).css('color', 'white');
+					angular.element('.' + name).css('border', '1px solid black');
 				}, 1100);
 			
 				$scope.playChord(chord); 
@@ -337,8 +334,8 @@ module.exports = function(app) {
 		chord.chosen = false;
 		var index = $scope.chosenChords.indexOf(chord);
 		$scope.chosenChords.splice(index, 1);
-		filter();
 		if ($scope.chosenChords.length == 0) $scope.reset();
+		else filter();
 	};
 
 
@@ -349,17 +346,6 @@ module.exports = function(app) {
 		$scope.allowedChords = [];
 		$scope.chosenChords = [];
 		$scope.melody = [];
-
-		$scope.initializeKeys();
-	};
-
-	$scope.initializeKeys = function() { //initial population of allowed keys
-		if ($scope.chosenChords.length == 0) {
-			$scope.allowedKeys = [];
-			keys.forEach(function(key) {
-				$scope.allowedKeys.push(key)
-			});
-		}
 	};
 
 	function filter() {

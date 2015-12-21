@@ -1,23 +1,22 @@
-<section id="authSection" data-ng-cloak>
-  <h1 id="authH1">Song Director</h1>
-  <h2 id="authH2">{{headingText}}</h2>
-  <form name="authForm" data-ng-submit="authenticate(user)">
+<section class="authSection" ng-cloak>
+  <h1 class="title">so<span class="mainColor">ng</span>maker</h1>
+  <form name="authForm" ng-submit="authenticate(user)">
     <div id ="user">
-      <label id="username" for="username">Username:</label>
-      <input type="text" id="username" required data-ng-model="user.username">
+      <label class="login">username:</label>
+      <input type="text" class="login" required ng-model="user.username">
     </div>
     <div id="pass">
-      <label id="password" for="password">Password:</label>
-      <input type="password" id="password" required data-ng-model="user.password">
+      <label class="login">password:</label>
+      <input type="password" class="login" required ng-model="user.password">
     </div>
-    <div class="centerButtons">
-      <button id="submit" type="submit" data-ng-disabled="authForm.$invalid">{{buttonText}}</button>
-      <button id="swap" type="button" data-ng-click="changePlaces()">{{userRelation}}</button>
+    <div class="buttons-container">
+      <button class="buttons loginBtn" type="submit" ng-disabled="authForm.$invalid">{{buttonText}}</button><br>
+      <button class="buttons switchViewsBtn" type="button" ng-click="switchAuthView()">{{userRelation}}</button>
     </div>
   </form>
-  <div class="makeSong">
-    <button class="songButton" data-ng-click="makeSong()">Create a Song</button>
-    <button class="songButton" data-ng-click="viewSongs()">View Song Catalog</button>
+  <div class="buttons-container">
+    <button class="buttons makeSongBtn" ng-click="makeSong()">make songs</button><br>
+    <button class="buttons viewSongsBtn" ng-click="viewSongs()">view songs</button>
   </div>
 
 
