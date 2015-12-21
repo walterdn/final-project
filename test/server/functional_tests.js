@@ -28,7 +28,7 @@ describe('the helper functions ... specifically', function() {
   describe('the "isArrayContained" function', function() {
     it('should check for containing arrays', function() {
       expect(helper.isArrayContained(['A', 'B', 'C'], ['B', 'C', 'D'])).to.eql(false);
-      expect(helper.isArrayContained(['A'], ['A'])).to.eql(true);
+      expect(helper.isArrayContained(['A'], ['A', 'B'])).to.eql(true);
     });
   });
 

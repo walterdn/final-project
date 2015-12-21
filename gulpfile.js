@@ -47,5 +47,5 @@ gulp.task('jsFiles:dev', function() {
   .pipe(gulp.dest('build/js/'));
 });
 
-gulp.task('build:dev', ['jsFiles:dev', 'htmlFiles:dev', 'cssFiles:dev', 'servertests']);
+gulp.task('build:dev', ['jsFiles:dev', 'htmlFiles:dev', 'cssFiles:dev']);
 gulp.task('default', ['build:dev']);

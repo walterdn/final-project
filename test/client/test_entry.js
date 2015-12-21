@@ -1,1 +1,1 @@
-require(__dirname + '/chords_controller_tests');
+require(__dirname + '/saved_songs_controller_tests');
