@@ -1,0 +1,272 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+body {
+  font-family: "Lucida Console", Monaco, monospace;
+  background: #ebebe0; }
+
+div {
+  cursor: default; }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important; }
+
+#all-chords-container, #allowed-chords-container, #chosen-chords-container, #allowed-keys-container, #allowed-notes-container, #chosen-notes-container {
+  background: white;
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  margin-top: 8px;
+  margin-bottom: 8px; }
+
+#chosen-chords-container {
+  flex-wrap: nowrap;
+  height: 72px; }
+
+#chosen-notes-container {
+  height: 50px;
+  position: relative; }
+
+.all-chords, .allowed-chords, .allowed-notes {
+  background: navy;
+  color: white;
+  border: 1px solid black;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 1.4em;
+  float: left;
+  margin: 5px;
+  padding: 3px; }
+
+.chosen-chords {
+  color: white;
+  border: 1px solid black;
+  text-align: center;
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  font-size: 2.8em;
+  float: left;
+  height: 64px;
+  width: 25%;
+  padding-top: 7px;
+  overflow: hidden; }
+
+.allowed-notes {
+  width: 50px; }
+
+.chosen-notes {
+  color: white;
+  text-align: center;
+  padding-top: 11px;
+  width: 30px;
+  font-size: 1.4em;
+  position: absolute;
+  height: 39px; }
+
+.keys {
+  background: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 2em;
+  float: left;
+  margin: 7px;
+  padding: 5px; }
+
+.play-button-container {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto; }
+
+.play-record-controls {
+  display: flex;
+  justify-content: center; }
+
+.play-button, .recording-button {
+  background: black;
+  color: white;
+  border: 1px solid black;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 3em;
+  padding: 5px;
+  margin: 9px; }
+
+.recording-button {
+  width: 90px;
+  height: 90px;
+  font-size: 1em;
+  background: #CC0000;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  border-color: black 9px; }
+
+.play-button-options {
+  background: black;
+  color: white;
+  border: 1px solid black;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 1.3em;
+  padding: 5px;
+  margin: 9px; }
+
+.amaj, .a {
+  background: #006600; }
+
+.amin {
+  background: #339933; }
+
+.bmaj, .b {
+  background: #003366; }
+
+.bmin {
+  background: #336699; }
+
+.cmaj, .c {
+  background: #cc0000; }
+
+.cmin {
+  background: #ff5050; }
+
+.dmaj, .d {
+  background: #cc3300; }
+
+.dmin {
+  background: #ff9900; }
+
+.emaj, .e {
+  background: #0033cc; }
+
+.emin {
+  background: #0066ff; }
+
+.fmaj, .f {
+  background: #800000; }
+
+.fmin {
+  background: #993333; }
+
+.gmaj, .g {
+  background: #660066; }
+
+.gmin {
+  background: #9900cc; }
+
+#authH1 {
+  font-family: "Great Vibes", cursive;
+  font-size: 3em;
+  padding: 2%;
+  margin-bottom: 3%;
+  white-space: nowrap;
+  font-weight: bold;
+  color: #000080;
+  display: flex;
+  justify-content: center; }
+
+#authH2 {
+  font-size: 1.5em;
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  padding-bottom: 2%;
+  display: flex;
+  white-space: nowrap;
+  justify-content: center; }
+
+#user {
+  padding: 2%;
+  display: flex;
+  justify-content: center; }
+
+#pass {
+  padding: 2%;
+  display: flex;
+  justify-content: center; }
+
+#username {
+  transition: box-shadow 0.3s, border 0.3s; }
+
+#password {
+  transition: box-shadow 0.3s, border 0.3s; }
+
+.centerButtons {
+  margin-top: 2%;
+  display: flex;
+  justify-content: center; }
+
+.makeSong {
+  margin-top: 5%;
+  display: flex;
+  justify-content: center; }
+
+.songButton {
+  text-align: center;
+  background: #000080;
+  color: white;
+  font-size: 22px;
+  font-family: 'Trebuchet MS', Helvetica, Arial, Sans-Serif;
+  text-decoration: none; }
+
+.songButton:hover {
+  cursor: pointer;
+  background: #0000F0; }
+
+#submit {
+  margin-right: 5%;
+  text-align: center;
+  background: #2CA01C;
+  color: #172852;
+  font-size: 22px;
+  font-family: 'Trebuchet MS', Helvetica, Arial, Sans-Serif;
+  text-decoration: none; }
+
+#submit:hover {
+  background: #2cFF1c;
+  cursor: pointer; }
+
+#submit:active {
+  border-top-color: #051621;
+  background: #051621; }
+
+#swap {
+  height: 75%;
+  background: #2CA01C;
+  color: #172852;
+  font-size: 22px;
+  font-family: 'Trebuchet MS', Helvetica, Arial, Sans-Serif;
+  text-decoration: none; }
+
+#swap:hover {
+  background: #2cFF1c;
+  cursor: pointer; }
+
+#swap:active {
+  background: #051621; }
+
+#authSection {
+  border-radius: 10%;
+  display: flex;
+  justify-content: center;
+  width: 38%;
+  background-color: #F5F5F5;
+  margin: auto;
+  margin-top: 12%;
+  display: block; }
