@@ -234,8 +234,8 @@ module.exports = function(app) {
 	    name +='note'
 	    angular.element('.' + name).css('background', '#ffbf00');
 				setTimeout(function() {
-					angular.element('.' + name).css('background', '#3a3a2c');
-				}, 140);
+					angular.element('.' + name).css('background', '#7F7F7A');
+				}, 170);
 	};
 
 	$scope.playBackNote = function(note){ //plays back a note from your recorded melody

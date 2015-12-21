@@ -351,8 +351,8 @@
 		    name +='note'
 		    angular.element('.' + name).css('background', '#ffbf00');
 					setTimeout(function() {
-						angular.element('.' + name).css('background', '#3a3a2c');
-					}, 140);
+						angular.element('.' + name).css('background', '#7F7F7A');
+					}, 170);
 		};
 
 		$scope.playBackNote = function(note){ //plays back a note from your recorded melody
@@ -31273,7 +31273,10 @@
 	        });
 	    };
 	    
-	    $scope.remove = function(song) {
+	    $scope.remove = function(song) { 
+	      if ($scope.currentUser != song.composer) {
+	        alert('Denied. You can only delete your own songs.');
+	      } else {
 	      $scope.songs.splice($scope.songs.indexOf(song), 1);
 	      $http.delete('/api/songs/' + song._id)
 	        .then(function(res) {
@@ -31283,11 +31286,16 @@
 	          $scope.errors.push('could not delete song');
 	          $scope.getAll();
 	        });
+	      }
 	    };
 
 	    $scope.loadSong = function(song) {
 	      $scope.songLoader(song);
 	      $location.path('/songs');
+	    };
+
+	    $scope.backToLogin = function() {
+	      $location.path('/signin');
 	    };
 
 	  }]);

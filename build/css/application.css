@@ -60,7 +60,7 @@ div {
   color: #cc2900; }
 
 .all-chords, .allowed-chords, .allowed-notes {
-  background: #3a3a2c;
+  background: #40403D;
   color: white;
   border: 1px solid black;
   border-radius: 2px;
@@ -93,6 +93,7 @@ div {
   overflow: hidden; }
 
 .allowed-notes {
+  background: #7F7F7A;
   font-size: 34px;
   width: 80px; }
 
@@ -202,10 +203,12 @@ div {
 #pass {
   margin-top: 10px; }
 
-#currUser {
+#logOut, #backToLogin {
   position: absolute;
   top: 2px;
-  right: 3px; }
+  right: 3px;
+  font-size: 1.4em;
+  padding: 6px; }
 
 .login {
   transition: box-shadow 0.3s, border 0.3s;
@@ -218,7 +221,7 @@ div {
   flex-direction: column;
   justify-content: center; }
 
-.buttons, .savedSongBtns, .musicBtns {
+.buttons, .savedSongBtns, .deleteSongBtns, .musicBtns {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -228,17 +231,31 @@ div {
   font-family: "Lucida Console", Monaco, monospace;
   text-decoration: none; }
 
-.buttons:hover, .savedSongBtns:hover, .musicBtns:hover {
+.buttons:hover, .savedSongBtns:hover, .deleteSongBtns:hover, .musicBtns:hover {
   background: white;
   color: #cc2900; }
 
 .saved-songs-container {
   flex-direction: row; }
 
+.one-song-container {
+  position: relative;
+  margin: 5px 15px 5px 15px; }
+
 .savedSongBtns {
+  display: flex;
+  flex-wrap: nowrap;
   font-size: 1.4em;
-  margin: 9px;
   padding: 6px; }
+
+.deleteSongBtns {
+  font-size: 1.4em;
+  margin: 0;
+  padding: 0 4px 0 4px;
+  height: 42px;
+  margin-top: -42px;
+  position: absolute;
+  right: -18px; }
 
 .authSection {
   display: block;
