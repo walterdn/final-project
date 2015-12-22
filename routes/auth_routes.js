@@ -7,17 +7,23 @@ var eatAuth = require(__dirname + '/../lib/eat_auth');
 var authRouter = module.exports = exports = express.Router();
 
 authRouter.post('/signup', jsonParser, function(req, res) {
-  var user = new User();
-  user.auth.basic.username = req.body.username;
-  user.username = req.body.username;
-  user.hashPassword(req.body.password);
+  User.findOne({'username': req.body.username}, function (err, user) {
+    if (!user) {
+      var user = new User();
+      user.auth.basic.username = req.body.username;
+      user.username = req.body.username;
+      user.hashPassword(req.body.password);
 
-  user.save(function(err, data) {
-    if (user.username === "" || req.body.password === "") return handleError(err, res);
-
-    data.generateToken(function(err, token) {
-      res.json({token: token});
-    });
+      user.save(function(err, data) {
+        if (user.username === "" || req.body.password === "") return handleError(err, res);
+        data.generateToken(function(err, token) {
+          res.json({token: token});
+        });
+      });
+    } else {
+      console.log('user already exists');
+      return res.status(401).json({msg: 'user by that name already exists'});
+    }
   });
 });
 

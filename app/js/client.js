@@ -125,6 +125,7 @@ module.exports = function(app) {
 			$scope.melody = song.melody;
 			filter();
 			$scope.inProgress = true;
+			$scope.songLoader('clearSongLoader');
 			$scope.$apply();
 		}
 	};

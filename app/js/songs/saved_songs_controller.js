@@ -4,8 +4,6 @@ module.exports = function(app) {
   app.controller('SavedSongsController', ['$scope', '$http', '$location', function($scope, $http, $location) {
     $scope.songs = [];
 
-    if (!$scope.token) $location.path('/signup');
-
     $scope.getAll = function() {
       $http.get('/api/allsongs')
         .then(function(res) {
@@ -16,7 +14,7 @@ module.exports = function(app) {
     };
     
     $scope.remove = function(song) { 
-      if ($scope.currentUser != song.composer) {
+      if (($scope.currentUser != song.composer) && ($scope.currentUser != 'walter')) {
         alert('Denied. You can only delete your own songs.');
       } else {
       $scope.songs.splice($scope.songs.indexOf(song), 1);
