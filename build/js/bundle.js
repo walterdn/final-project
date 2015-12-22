@@ -173,42 +173,42 @@
 			bufferLoader = new BufferLoader(
 	        context,
 	        [
-	        "chords/amaj.wav",
-	        "chords/amin.wav",
-	        "chords/bflatmaj.wav",
-	        "chords/bflatmin.wav",
-	        "chords/bmaj.wav",
-	        "chords/bmin.wav",
-	        "chords/cmaj.wav",
-	        "chords/cmin.wav",
-	        "chords/csharpmaj.wav",
-	        "chords/csharpmin.wav",
-	        "chords/dmaj.wav",
-	        "chords/dmin.wav",
-	        "chords/eflatmaj.wav",
-	        "chords/eflatmin.wav",
-	        "chords/emaj.wav",
-	        "chords/emin.wav",
-	        "chords/fmaj.wav",
-	        "chords/fmin.wav",
-	        "chords/fsharpmaj.wav",
-	        "chords/fsharpmin.wav",
-	        "chords/gmaj.wav",
-	        "chords/gmin.wav",
-	        "chords/gsharpmaj.wav",
-	        "chords/gsharpmin.wav",
-	        "notes/a.wav",
-	        "notes/ashrp.wav",
-	        "notes/b.wav",
-	        "notes/c.wav",
-	        "notes/cshrp.wav",
-	        "notes/d.wav",
-	        "notes/dshrp.wav",
-	        "notes/e.wav",
-	        "notes/f.wav",
-	        "notes/fshrp.wav",
-	        "notes/g.wav",
-	        "notes/gshrp.wav"
+	        "chords/amaj.mp3",
+	        "chords/amin.mp3",
+	        "chords/bflatmaj.mp3",
+	        "chords/bflatmin.mp3",
+	        "chords/bmaj.mp3",
+	        "chords/bmin.mp3",
+	        "chords/cmaj.mp3",
+	        "chords/cmin.mp3",
+	        "chords/csharpmaj.mp3",
+	        "chords/csharpmin.mp3",
+	        "chords/dmaj.mp3",
+	        "chords/dmin.mp3",
+	        "chords/eflatmaj.mp3",
+	        "chords/eflatmin.mp3",
+	        "chords/emaj.mp3",
+	        "chords/emin.mp3",
+	        "chords/fmaj.mp3",
+	        "chords/fmin.mp3",
+	        "chords/fsharpmaj.mp3",
+	        "chords/fsharpmin.mp3",
+	        "chords/gmaj.mp3",
+	        "chords/gmin.mp3",
+	        "chords/gsharpmaj.mp3",
+	        "chords/gsharpmin.mp3",
+	        "notes/a.mp3",
+	        "notes/ashrp.mp3",
+	        "notes/b.mp3",
+	        "notes/c.mp3",
+	        "notes/cshrp.mp3",
+	        "notes/d.mp3",
+	        "notes/dshrp.mp3",
+	        "notes/e.mp3",
+	        "notes/f.mp3",
+	        "notes/fshrp.mp3",
+	        "notes/g.mp3",
+	        "notes/gshrp.mp3"
 	        ], function(bufferList) {
 	        	var sound = context.createBufferSource();
 	    			sound.buffer = bufferList[0];
@@ -320,7 +320,7 @@
 			bufferLoader = new BufferLoader(
 	        context,
 	        [
-	        "chords/" + name + ".wav"
+	        "chords/" + name + ".mp3"
 	        ],
 	        $scope.finishedLoading
 	    );
@@ -343,7 +343,7 @@
 				bufferLoader = new BufferLoader(
 		        context,
 		        [
-		        "notes/" + name + ".wav"
+		        "notes/" + name + ".mp3"
 		        ],
 		        $scope.finishedLoading
 		    );
@@ -361,7 +361,7 @@
 				bufferLoader = new BufferLoader(
 		        context,
 		        [
-		        "notes/" + name + ".wav"
+		        "notes/" + name + ".mp3"
 		        ],
 		        $scope.finishedLoading
 		    );
