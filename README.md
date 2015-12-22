@@ -16,4 +16,5 @@
 
 * Once you have your chords in place, you may hit "Play" to listen to the song. To rearrange a chord, you can swap it with any other chord in your song by clicking and dragging that chord to the chord you want to swap with.
 * To test out a melody with your song, hit "Play" again and either click on the grey notes or press a valid keyboard key beginning with 'a' and continuing down the line (ex: a, s, d, f, ...).
+
 * Once you are ready to record your song, click "Record Next Play", hit "Play" and then play your notes as the song chords play out.
