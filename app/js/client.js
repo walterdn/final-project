@@ -144,13 +144,9 @@ module.exports = function(app) {
 		$location.path('/savedsongs');
 	};
 
-	$scope.logOut = function() {
+	$scope.logOut2 = function() {
 		$scope.reset();
-    $scope.token = null;
-    $scope.currentUser = null;
-    $cookies.remove('token');
-    $location.path('/signin');
-  };
+	};
 
 	$(window).keypress(function(e) { //plays notes upon keypresses of a, s, d, f, g, h, j, k, l, and space bar to play. 
 		if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);//breaks if you ever leave the main page then come back to it in the same session
@@ -239,8 +235,8 @@ module.exports = function(app) {
 	    name +='note'
 	    angular.element('.' + name).css('background', '#ffbf00');
 				setTimeout(function() {
-					angular.element('.' + name).css('background', '#3a3a2c');
-				}, 140);
+					angular.element('.' + name).css('background', '#7F7F7A');
+				}, 170);
 	};
 
 	$scope.playBackNote = function(note){ //plays back a note from your recorded melody

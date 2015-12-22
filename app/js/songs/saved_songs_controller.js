@@ -15,7 +15,10 @@ module.exports = function(app) {
         });
     };
     
-    $scope.remove = function(song) {
+    $scope.remove = function(song) { 
+      if ($scope.currentUser != song.composer) {
+        alert('Denied. You can only delete your own songs.');
+      } else {
       $scope.songs.splice($scope.songs.indexOf(song), 1);
       $http.delete('/api/songs/' + song._id)
         .then(function(res) {
@@ -25,11 +28,16 @@ module.exports = function(app) {
           $scope.errors.push('could not delete song');
           $scope.getAll();
         });
+      }
     };
 
     $scope.loadSong = function(song) {
       $scope.songLoader(song);
       $location.path('/songs');
+    };
+
+    $scope.backToLogin = function() {
+      $location.path('/signin');
     };
 
   }]);

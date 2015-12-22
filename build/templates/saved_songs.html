@@ -1,6 +1,10 @@
 <section ng-init="getAll()">
+	<button class="buttons" ng-if="!currentUser" ng-click="backToLogin()" id="backToLogin"> login </button>
   <div class="title"><span style="font-size:.45em">the definitive</span><br>so<span class="mainColor">ng</span>book</div>
   <div class="saved-songs-container">
-    <div ng-repeat="song in songs"><button class="savedSongBtns" ng-click="loadSong(song)">{{song.name}} by {{song.composer}}</button></div>
+    <div class="one-song-container" ng-repeat="song in songs">
+    	<button class="savedSongBtns" ng-click="loadSong(song)">{{song.name}} by {{song.composer}}</button>
+    	<button class="deleteSongBtns" ng-click="remove(song)">&times</button>
+    </div>
   </div>
 </section>

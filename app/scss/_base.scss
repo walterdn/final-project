@@ -72,7 +72,7 @@ div {
 }
 
 .all-chords, .allowed-chords, .allowed-notes {
-	@include item(#3a3a2c, white);
+	@include item(#40403D, white);
 	flex-grow: 1;
 
 	font-family: 'Trebuchet MS', Helvetica, sans-serif;
@@ -106,6 +106,7 @@ div {
 }
 
 .allowed-notes {
+	background: #7F7F7A;
 	font-size: 34px;
 	width: 80px;
 }
@@ -220,11 +221,22 @@ div {
 	margin-top: 10px;
 }
 
-#currUser {
+#backToLogin {
 	position: absolute;
 	top: 2px;
 	right: 3px;
+	font-size: 1.4em;
+	padding: 6px;
 }
+
+#logOut {
+	position: absolute;
+	top: 2px;
+	right: 3px;
+	font-size: 1.4em;
+	padding: 6px;
+}
+
 
 .login {
   transition: box-shadow 0.3s, border 0.3s;
@@ -260,11 +272,28 @@ div {
 	flex-direction: row;
 }
 
+.one-song-container {
+	position: relative;
+	margin: 5px 15px 5px 15px;
+}
+
 .savedSongBtns {
 	@extend .buttons;
+	display: flex;
+	flex-wrap: nowrap;
 	font-size: 1.4em;
-	margin: 9px;
 	padding: 6px;
+}
+
+.deleteSongBtns {
+	@extend .buttons;
+  font-size: 1.4em;
+  margin: 0;
+  padding: 0 4px 0 4px;
+  height: 42px;
+  margin-top: -42px;
+  position: absolute;
+  right: -18px;
 }
 
 .authSection {

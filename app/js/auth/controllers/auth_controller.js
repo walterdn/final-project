@@ -1,6 +1,14 @@
 module.exports = function(app) {
   app.controller('AuthController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
     
+    $scope.logOut = function() {
+      // $scope.reset();
+      $scope.token = null;
+      $scope.currentUser = null;
+      $cookies.remove('token');
+      $location.path('/signin');
+    };
+    
     $scope.getUser = function() {
       $scope.token = $cookies.get('token');
       $http.defaults.headers.common.token = $scope.token;

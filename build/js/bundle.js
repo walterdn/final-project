@@ -261,13 +261,9 @@
 			$location.path('/savedsongs');
 		};
 
-		$scope.logOut = function() {
+		$scope.logOut2 = function() {
 			$scope.reset();
-	    $scope.token = null;
-	    $scope.currentUser = null;
-	    $cookies.remove('token');
-	    $location.path('/signin');
-	  };
+		};
 
 		$(window).keypress(function(e) { //plays notes upon keypresses of a, s, d, f, g, h, j, k, l, and space bar to play. 
 			if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);//breaks if you ever leave the main page then come back to it in the same session
@@ -330,16 +326,6 @@
 	  	source.buffer = chord.sound.buffer;
 	 	  source.connect(context.destination);
 	  	source.start(0);
-
-			// bufferLoader = new BufferLoader(
-	  //       context,
-	  //       [
-	  //       "chords/" + name + ".wav"
-	  //       ],
-	  //       $scope.finishedLoading
-	  //   );
-
-	  //   bufferLoader.load();
 		}; 
 
 		$scope.playNote = function(note){ //plays a single note, also records it to melody if you are recording
@@ -366,8 +352,8 @@
 		    name +='note'
 		    angular.element('.' + name).css('background', '#ffbf00');
 					setTimeout(function() {
-						angular.element('.' + name).css('background', '#3a3a2c');
-					}, 140);
+						angular.element('.' + name).css('background', '#7F7F7A');
+					}, 170);
 		};
 
 		$scope.playBackNote = function(note){ //plays back a note from your recorded melody
@@ -31872,7 +31858,8 @@
 	  app.controller('SigninController', ['$scope', '$http', '$location', '$base64', '$cookies', function($scope, $http, $location, $base64, $cookies) {
 	    $scope.headingText = 'sign in to existing user';
 	    $scope.buttonText = 'sign in';
-	    $scope.userRelation = 'go to signup'
+	    $scope.userRelation = 'go to signup';
+
 	    $scope.authenticate = function(user) {
 	      $http({
 	        method: 'GET',
@@ -31908,6 +31895,14 @@
 
 	module.exports = function(app) {
 	  app.controller('AuthController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
+	    
+	    $scope.logOut = function() {
+	      // $scope.reset();
+	      $scope.token = null;
+	      $scope.currentUser = null;
+	      $cookies.remove('token');
+	      $location.path('/signin');
+	    };
 	    
 	    $scope.getUser = function() {
 	      $scope.token = $cookies.get('token');
@@ -31949,7 +31944,10 @@
 	        });
 	    };
 	    
-	    $scope.remove = function(song) {
+	    $scope.remove = function(song) { 
+	      if ($scope.currentUser != song.composer) {
+	        alert('Denied. You can only delete your own songs.');
+	      } else {
 	      $scope.songs.splice($scope.songs.indexOf(song), 1);
 	      $http.delete('/api/songs/' + song._id)
 	        .then(function(res) {
@@ -31959,11 +31957,16 @@
 	          $scope.errors.push('could not delete song');
 	          $scope.getAll();
 	        });
+	      }
 	    };
 
 	    $scope.loadSong = function(song) {
 	      $scope.songLoader(song);
 	      $location.path('/songs');
+	    };
+
+	    $scope.backToLogin = function() {
+	      $location.path('/signin');
 	    };
 
 	  }]);
