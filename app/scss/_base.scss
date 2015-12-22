@@ -221,7 +221,15 @@ div {
 	margin-top: 10px;
 }
 
-#logOut, #backToLogin {
+#backToLogin {
+	position: absolute;
+	top: 2px;
+	right: 3px;
+	font-size: 1.4em;
+	padding: 6px;
+}
+
+#logOut {
 	position: absolute;
 	top: 2px;
 	right: 3px;

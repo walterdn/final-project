@@ -48,12 +48,12 @@
 	__webpack_require__(2);
 	__webpack_require__(5);
 	__webpack_require__(4);
-	__webpack_require__(16);
 	__webpack_require__(11);
+	__webpack_require__(12);
+	__webpack_require__(16);
 	__webpack_require__(15);
 	__webpack_require__(14);
-	__webpack_require__(13);
-	module.exports = __webpack_require__(12);
+	module.exports = __webpack_require__(13);
 
 
 /***/ },
@@ -252,13 +252,9 @@
 			$location.path('/savedsongs');
 		};
 
-		$scope.logOut = function() {
+		$scope.logOut2 = function() {
 			$scope.reset();
-	    $scope.token = null;
-	    $scope.currentUser = null;
-	    $cookies.remove('token');
-	    $location.path('/signin');
-	  };
+		};
 
 		$(window).keypress(function(e) { //plays notes upon keypresses of a, s, d, f, g, h, j, k, l, and space bar to play. 
 			if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);//breaks if you ever leave the main page then come back to it in the same session
@@ -29600,13 +29596,15 @@
 	__webpack_require__(6);
 	__webpack_require__(8);
 	__webpack_require__(10);
+	__webpack_require__(11);
 	var angular = window.angular;
 	var BufferLoader = __webpack_require__(1);
 
+
 	var songWriterApp = angular.module('SongWriterApp', ['ngRoute', 'ngCookies', 'base64', 'ngDraggable']);
 	__webpack_require__(2)(songWriterApp);
-	__webpack_require__(11)(songWriterApp);
-	__webpack_require__(15)(songWriterApp);
+	__webpack_require__(12)(songWriterApp);
+	__webpack_require__(16)(songWriterApp);
 
 	songWriterApp.config(['$routeProvider', function($route) {
 	  $route
@@ -31146,164 +31144,6 @@
 
 /***/ },
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function(app) {
-	  __webpack_require__(12)(app);
-	  __webpack_require__(13)(app);
-	  __webpack_require__(14)(app);
-	};
-
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	module.exports = function(app) {
-	  app.controller('SignupController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
-	    $scope.headingText = 'sign up to create sweet jams';
-	    $scope.buttonText = 'sign up';
-	    $scope.userRelation = 'go to signin'
-	    $scope.authenticate = function(user) {
-	      $http.post('/api/signup', user)
-	        .then(function(res){
-	          $cookies.put('token', res.data.token);
-	          $scope.getUser();
-	          $location.path('/songs');
-	        }, function(err) {
-	          console.log(err.data);
-	        });
-	    };
-
-	    $scope.switchAuthView = function() {
-	      $location.path('/signin');
-	    };
-	    $scope.makeSong = function() {
-	      $location.path('/songs');
-	    };
-	    $scope.viewSongs = function() {
-	      $location.path('/savedsongs');
-	    };
-	  }]);
-	};
-
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	module.exports = function(app) {
-	  app.controller('SigninController', ['$scope', '$http', '$location', '$base64', '$cookies', function($scope, $http, $location, $base64, $cookies) {
-	    $scope.headingText = 'sign in to existing user';
-	    $scope.buttonText = 'sign in';
-	    $scope.userRelation = 'go to signup'
-	    $scope.authenticate = function(user) {
-	      $http({
-	        method: 'GET',
-	        url: '/api/signin',
-	        headers: {
-	          'Authorization': 'Basic ' + $base64.encode(user.username + ':' + user.password)
-	        }
-	      })
-	      .then(function(res) {
-	        $cookies.put('token', res.data.token);
-	        $scope.getUser(); //from auth controller
-	        $location.path('/songs');
-	      }, function(err) {
-	        console.log(err);
-	      });
-	    };
-	    $scope.switchAuthView = function() {
-	      $location.path('/signup');
-	    };
-	    $scope.makeSong = function() {
-	      $location.path('/songs');
-	    };
-	    $scope.viewSongs = function() {
-	      $location.path('savedsongs');
-	    };
-	  }]);
-	};
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
-
-	module.exports = function(app) {
-	  app.controller('AuthController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
-	    
-	    $scope.getUser = function() {
-	      $scope.token = $cookies.get('token');
-	      $http.defaults.headers.common.token = $scope.token;
-	      $http.get('/api/users')
-	      .then(function(res) {
-	        $scope.currentUser = res.data.username;
-	      }, function(err) {
-	        console.log(err);
-	      });
-	    };
-
-	    $scope.songLoader = function(song) { //gets set in save_songs_controller from the /savesongs view, and then called from in client.js from /songs view
-	      if(song) $scope.loadThisSong = song;
-	      else return $scope.loadThisSong;
-	    };
-	  }]);
-	};
-
-
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	var angular = window.angular;
-
-	module.exports = function(app) {
-	  app.controller('SavedSongsController', ['$scope', '$http', '$location', function($scope, $http, $location) {
-	    $scope.songs = [];
-
-	    if (!$scope.token) $location.path('/signup');
-
-	    $scope.getAll = function() {
-	      $http.get('/api/allsongs')
-	        .then(function(res) {
-	          $scope.songs = res.data;
-	        }, function(err) {
-	          console.log(err.data);
-	        });
-	    };
-	    
-	    $scope.remove = function(song) { 
-	      if ($scope.currentUser != song.composer) {
-	        alert('Denied. You can only delete your own songs.');
-	      } else {
-	      $scope.songs.splice($scope.songs.indexOf(song), 1);
-	      $http.delete('/api/songs/' + song._id)
-	        .then(function(res) {
-	          console.log('song deleted');
-	        }, function(err) {
-	          console.log(err.data);
-	          $scope.errors.push('could not delete song');
-	          $scope.getAll();
-	        });
-	      }
-	    };
-
-	    $scope.loadSong = function(song) {
-	      $scope.songLoader(song);
-	      $location.path('/songs');
-	    };
-
-	    $scope.backToLogin = function() {
-	      $location.path('/signin');
-	    };
-
-	  }]);
-	};
-
-
-/***/ },
-/* 16 */
 /***/ function(module, exports) {
 
 	/*
@@ -31959,6 +31799,173 @@
 	            }
 	        };
 	    }]);
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(app) {
+	  __webpack_require__(13)(app);
+	  __webpack_require__(14)(app);
+	  __webpack_require__(15)(app);
+	};
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('SignupController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
+	    $scope.headingText = 'sign up to create sweet jams';
+	    $scope.buttonText = 'sign up';
+	    $scope.userRelation = 'go to signin'
+	    $scope.authenticate = function(user) {
+	      $http.post('/api/signup', user)
+	        .then(function(res){
+	          $cookies.put('token', res.data.token);
+	          $scope.getUser();
+	          $location.path('/songs');
+	        }, function(err) {
+	          console.log(err.data);
+	        });
+	    };
+
+	    $scope.switchAuthView = function() {
+	      $location.path('/signin');
+	    };
+	    $scope.makeSong = function() {
+	      $location.path('/songs');
+	    };
+	    $scope.viewSongs = function() {
+	      $location.path('/savedsongs');
+	    };
+	  }]);
+	};
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('SigninController', ['$scope', '$http', '$location', '$base64', '$cookies', function($scope, $http, $location, $base64, $cookies) {
+	    $scope.headingText = 'sign in to existing user';
+	    $scope.buttonText = 'sign in';
+	    $scope.userRelation = 'go to signup';
+
+	    $scope.authenticate = function(user) {
+	      $http({
+	        method: 'GET',
+	        url: '/api/signin',
+	        headers: {
+	          'Authorization': 'Basic ' + $base64.encode(user.username + ':' + user.password)
+	        }
+	      })
+	      .then(function(res) {
+	        $cookies.put('token', res.data.token);
+	        $scope.getUser(); //from auth controller
+	        $location.path('/songs');
+	      }, function(err) {
+	        console.log(err);
+	      });
+	    };
+	    $scope.switchAuthView = function() {
+	      $location.path('/signup');
+	    };
+	    $scope.makeSong = function() {
+	      $location.path('/songs');
+	    };
+	    $scope.viewSongs = function() {
+	      $location.path('savedsongs');
+	    };
+	  }]);
+	};
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('AuthController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
+	    
+	    $scope.logOut = function() {
+	      // $scope.reset();
+	      $scope.token = null;
+	      $scope.currentUser = null;
+	      $cookies.remove('token');
+	      $location.path('/signin');
+	    };
+	    
+	    $scope.getUser = function() {
+	      $scope.token = $cookies.get('token');
+	      $http.defaults.headers.common.token = $scope.token;
+	      $http.get('/api/users')
+	      .then(function(res) {
+	        $scope.currentUser = res.data.username;
+	      }, function(err) {
+	        console.log(err);
+	      });
+	    };
+
+	    $scope.songLoader = function(song) { //gets set in save_songs_controller from the /savesongs view, and then called from in client.js from /songs view
+	      if(song) $scope.loadThisSong = song;
+	      else return $scope.loadThisSong;
+	    };
+	  }]);
+	};
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	var angular = window.angular;
+
+	module.exports = function(app) {
+	  app.controller('SavedSongsController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+	    $scope.songs = [];
+
+	    if (!$scope.token) $location.path('/signup');
+
+	    $scope.getAll = function() {
+	      $http.get('/api/allsongs')
+	        .then(function(res) {
+	          $scope.songs = res.data;
+	        }, function(err) {
+	          console.log(err.data);
+	        });
+	    };
+	    
+	    $scope.remove = function(song) { 
+	      if ($scope.currentUser != song.composer) {
+	        alert('Denied. You can only delete your own songs.');
+	      } else {
+	      $scope.songs.splice($scope.songs.indexOf(song), 1);
+	      $http.delete('/api/songs/' + song._id)
+	        .then(function(res) {
+	          console.log('song deleted');
+	        }, function(err) {
+	          console.log(err.data);
+	          $scope.errors.push('could not delete song');
+	          $scope.getAll();
+	        });
+	      }
+	    };
+
+	    $scope.loadSong = function(song) {
+	      $scope.songLoader(song);
+	      $location.path('/songs');
+	    };
+
+	    $scope.backToLogin = function() {
+	      $location.path('/signin');
+	    };
+
+	  }]);
+	};
 
 
 /***/ }
