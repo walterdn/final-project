@@ -243,7 +243,8 @@ div {
   color: #cc2900; }
 
 .saved-songs-container {
-  flex-direction: row; }
+  flex-direction: row;
+  flex-wrap: wrap; }
 
 .one-song-container {
   position: relative;

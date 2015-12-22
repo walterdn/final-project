@@ -242,6 +242,7 @@
 				$scope.melody = song.melody;
 				filter();
 				$scope.inProgress = true;
+				$scope.songLoader('clearSongLoader');
 				$scope.$apply();
 			}
 		};
@@ -31895,7 +31896,6 @@
 	  app.controller('AuthController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
 	    
 	    $scope.logOut = function() {
-	      // $scope.reset();
 	      $scope.token = null;
 	      $scope.currentUser = null;
 	      $cookies.remove('token');
@@ -31914,7 +31914,8 @@
 	    };
 
 	    $scope.songLoader = function(song) { //gets set in save_songs_controller from the /savesongs view, and then called from in client.js from /songs view
-	      if(song) $scope.loadThisSong = song;
+	      if (song == 'clearSongLoader') $scope.loadThisSong = null;
+	      if (song) $scope.loadThisSong = song;
 	      else return $scope.loadThisSong;
 	    };
 	  }]);
@@ -31931,8 +31932,6 @@
 	  app.controller('SavedSongsController', ['$scope', '$http', '$location', function($scope, $http, $location) {
 	    $scope.songs = [];
 
-	    if (!$scope.token) $location.path('/signup');
-
 	    $scope.getAll = function() {
 	      $http.get('/api/allsongs')
 	        .then(function(res) {
@@ -31943,7 +31942,7 @@
 	    };
 	    
 	    $scope.remove = function(song) { 
-	      if ($scope.currentUser != song.composer) {
+	      if (($scope.currentUser != song.composer) && ($scope.currentUser != 'walter')) {
 	        alert('Denied. You can only delete your own songs.');
 	      } else {
 	      $scope.songs.splice($scope.songs.indexOf(song), 1);
