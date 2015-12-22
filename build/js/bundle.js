@@ -48,12 +48,12 @@
 	__webpack_require__(2);
 	__webpack_require__(5);
 	__webpack_require__(4);
-	__webpack_require__(16);
 	__webpack_require__(11);
+	__webpack_require__(12);
+	__webpack_require__(16);
 	__webpack_require__(15);
 	__webpack_require__(14);
-	__webpack_require__(13);
-	module.exports = __webpack_require__(12);
+	module.exports = __webpack_require__(13);
 
 
 /***/ },
@@ -138,36 +138,50 @@
 		];
 
 		$scope.chords = [
-			{name: 'c maj', notes: ['C', 'E', 'G']},
-			{name: 'c min', notes: ["C", "D#", "G"]},
-			{name: 'c sharp maj', notes: ["C#", "F", "G#"]},
-			{name: 'c sharp min', notes: ["C#", "E", "G#"]},	
-			{name: 'd maj', notes: ["D", "F#", "A"]},
-			{name: 'd min', notes: ["D", "F", "A"]},
-			{name: 'e flat maj', notes: ["D#", "G", "A#"]},
-			{name: 'e flat min', notes: ["D#", "F#", "A#"]},
-			{name: 'e maj', notes: ["E", "G#", "B"]},
-			{name: 'e min', notes: ["E", "G", "B"]},
-			{name: 'f maj', notes: ["F", "A", "C"]},
-			{name: 'f min', notes: ["F", "G#", "C"]},
-			{name: 'f sharp maj', notes: ["F#", "A#", "C#"]},
-			{name: 'f sharp min', notes: ["F#", "A", "C#"]},
-			{name: 'g maj', notes: ["G", "B", "D"]},
-			{name: 'g min', notes: ["G", "A#", "D"]},
-			{name: 'g sharp maj', notes: ["G#", "C", "D#"]},
-			{name: 'g sharp min', notes: ["G#", "B", "D#"]},
-			{name: 'a maj', notes: ["A", "C#", "E"]},
-			{name: 'a min', notes: ["A", "C", "E"]},
-			{name: 'b flat maj', notes: ["A#", "D", "F"]},
-			{name: 'b flat min', notes: ["A#", "C#", "F"]},
-			{name: 'b maj', notes: ["B", "D#", "F#"]},
-			{name: 'b min', notes: ["B", "D", "F#"]}
+			{name: 'c maj', notes: ['C', 'E', 'G'], sound: {}},
+			{name: 'c min', notes: ["C", "D#", "G"], sound: {}},
+			{name: 'c sharp maj', notes: ["C#", "F", "G#"], sound: {}},
+			{name: 'c sharp min', notes: ["C#", "E", "G#"], sound: {}},	
+			{name: 'd maj', notes: ["D", "F#", "A"], sound: {}},
+			{name: 'd min', notes: ["D", "F", "A"], sound: {}},
+			{name: 'e flat maj', notes: ["D#", "G", "A#"], sound: {}},
+			{name: 'e flat min', notes: ["D#", "F#", "A#"], sound: {}},
+			{name: 'e maj', notes: ["E", "G#", "B"], sound: {}},
+			{name: 'e min', notes: ["E", "G", "B"], sound: {}},
+			{name: 'f maj', notes: ["F", "A", "C"], sound: {}},
+			{name: 'f min', notes: ["F", "G#", "C"], sound: {}},
+			{name: 'f sharp maj', notes: ["F#", "A#", "C#"], sound: {}},
+			{name: 'f sharp min', notes: ["F#", "A", "C#"], sound: {}},
+			{name: 'g maj', notes: ["G", "B", "D"], sound: {}},
+			{name: 'g min', notes: ["G", "A#", "D"], sound: {}},
+			{name: 'g sharp maj', notes: ["G#", "C", "D#"], sound: {}},
+			{name: 'g sharp min', notes: ["G#", "B", "D#"], sound: {}},
+			{name: 'a maj', notes: ["A", "C#", "E"], sound: {}},
+			{name: 'a min', notes: ["A", "C", "E"], sound: {}},
+			{name: 'b flat maj', notes: ["A#", "D", "F"], sound: {}},
+			{name: 'b flat min', notes: ["A#", "C#", "F"], sound: {}},
+			{name: 'b maj', notes: ["B", "D#", "F#"], sound: {}},
+			{name: 'b min', notes: ["B", "D", "F#"], sound: {}}
 		];
 
 		$scope.context; 
 		$scope.bufferLoader;
 		context = new AudioContext();
 		$scope.doneLoadingSounds = false;
+
+		$scope.finishedInitialLoading = function(bufferList) {
+	     //adds chords as buffers to $scope.chords
+	     //does not store references to note buffers...
+	    for(var item in $scope.chords){
+
+	   		$scope.chords[item].sound = context.createBufferSource();
+	   		$scope.chords[item].sound.buffer = bufferList[item]; 
+	   		$scope.chords[item].sound.connect(context.destination);
+
+	    }
+	   	$scope.doneLoadingSounds = true;
+	   	$scope.$apply();
+	 	};
 
 
 		$scope.loadSounds = function(){ //loads all sounds into buffer on pageload
@@ -210,13 +224,8 @@
 	        "notes/fshrp.wav",
 	        "notes/g.wav",
 	        "notes/gshrp.wav"
-	        ], function(bufferList) {
-	        	var sound = context.createBufferSource();
-	    			sound.buffer = bufferList[0];
-	    			sound.connect(context.destination);
-	        	$scope.doneLoadingSounds = true;
-	        	$scope.$apply();
-	        }
+	        ], 
+	        $scope.finishedInitialLoading
 	    );
 
 	    bufferLoader.load();
@@ -305,6 +314,7 @@
 			}
 		};
 
+		//this now only gets called by a note...
 		$scope.finishedLoading = function(bufferList) { //audio playing function
 	    //Create source for audio context
 	    var sound = context.createBufferSource();
@@ -315,16 +325,21 @@
 
 
 		$scope.playChord = function(chord){ //plays one chord sound
-			var name = helper.removeSpaces(chord.name);
-			bufferLoader = new BufferLoader(
-	        context,
-	        [
-	        "chords/" + name + ".wav"
-	        ],
-	        $scope.finishedLoading
-	    );
 
-	    bufferLoader.load();
+			var source = context.createBufferSource();
+	  	source.buffer = chord.sound.buffer;
+	 	  source.connect(context.destination);
+	  	source.start(0);
+
+			// bufferLoader = new BufferLoader(
+	  //       context,
+	  //       [
+	  //       "chords/" + name + ".wav"
+	  //       ],
+	  //       $scope.finishedLoading
+	  //   );
+
+	  //   bufferLoader.load();
 		}; 
 
 		$scope.playNote = function(note){ //plays a single note, also records it to melody if you are recording
@@ -29600,13 +29615,15 @@
 	__webpack_require__(6);
 	__webpack_require__(8);
 	__webpack_require__(10);
+	__webpack_require__(11);
 	var angular = window.angular;
 	var BufferLoader = __webpack_require__(1);
 
+
 	var songWriterApp = angular.module('SongWriterApp', ['ngRoute', 'ngCookies', 'base64', 'ngDraggable']);
 	__webpack_require__(2)(songWriterApp);
-	__webpack_require__(11)(songWriterApp);
-	__webpack_require__(15)(songWriterApp);
+	__webpack_require__(12)(songWriterApp);
+	__webpack_require__(16)(songWriterApp);
 
 	songWriterApp.config(['$routeProvider', function($route) {
 	  $route
@@ -31146,156 +31163,6 @@
 
 /***/ },
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function(app) {
-	  __webpack_require__(12)(app);
-	  __webpack_require__(13)(app);
-	  __webpack_require__(14)(app);
-	};
-
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	module.exports = function(app) {
-	  app.controller('SignupController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
-	    $scope.headingText = 'sign up to create sweet jams';
-	    $scope.buttonText = 'sign up';
-	    $scope.userRelation = 'go to signin'
-	    $scope.authenticate = function(user) {
-	      $http.post('/api/signup', user)
-	        .then(function(res){
-	          $cookies.put('token', res.data.token);
-	          $scope.getUser();
-	          $location.path('/songs');
-	        }, function(err) {
-	          console.log(err.data);
-	        });
-	    };
-
-	    $scope.switchAuthView = function() {
-	      $location.path('/signin');
-	    };
-	    $scope.makeSong = function() {
-	      $location.path('/songs');
-	    };
-	    $scope.viewSongs = function() {
-	      $location.path('/savedsongs');
-	    };
-	  }]);
-	};
-
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	module.exports = function(app) {
-	  app.controller('SigninController', ['$scope', '$http', '$location', '$base64', '$cookies', function($scope, $http, $location, $base64, $cookies) {
-	    $scope.headingText = 'sign in to existing user';
-	    $scope.buttonText = 'sign in';
-	    $scope.userRelation = 'go to signup'
-	    $scope.authenticate = function(user) {
-	      $http({
-	        method: 'GET',
-	        url: '/api/signin',
-	        headers: {
-	          'Authorization': 'Basic ' + $base64.encode(user.username + ':' + user.password)
-	        }
-	      })
-	      .then(function(res) {
-	        $cookies.put('token', res.data.token);
-	        $scope.getUser(); //from auth controller
-	        $location.path('/songs');
-	      }, function(err) {
-	        console.log(err);
-	      });
-	    };
-	    $scope.switchAuthView = function() {
-	      $location.path('/signup');
-	    };
-	    $scope.makeSong = function() {
-	      $location.path('/songs');
-	    };
-	    $scope.viewSongs = function() {
-	      $location.path('savedsongs');
-	    };
-	  }]);
-	};
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
-
-	module.exports = function(app) {
-	  app.controller('AuthController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
-	    
-	    $scope.getUser = function() {
-	      $scope.token = $cookies.get('token');
-	      $http.defaults.headers.common.token = $scope.token;
-	      $http.get('/api/users')
-	      .then(function(res) {
-	        $scope.currentUser = res.data.username;
-	      }, function(err) {
-	        console.log(err);
-	      });
-	    };
-
-	    $scope.songLoader = function(song) { //gets set in save_songs_controller from the /savesongs view, and then called from in client.js from /songs view
-	      if(song) $scope.loadThisSong = song;
-	      else return $scope.loadThisSong;
-	    };
-	  }]);
-	};
-
-
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	var angular = window.angular;
-
-	module.exports = function(app) {
-	  app.controller('SavedSongsController', ['$scope', '$http', '$location', function($scope, $http, $location) {
-	    $scope.songs = [];
-
-	    if (!$scope.token) $location.path('/signup');
-
-	    $scope.getAll = function() {
-	      $http.get('/api/allsongs')
-	        .then(function(res) {
-	          $scope.songs = res.data;
-	        }, function(err) {
-	          console.log(err.data);
-	        });
-	    };
-	    
-	    $scope.remove = function(song) {
-	      $scope.songs.splice($scope.songs.indexOf(song), 1);
-	      $http.delete('/api/songs/' + song._id)
-	        .then(function(res) {
-	          console.log('song deleted');
-	        }, function(err) {
-	          console.log(err.data);
-	          $scope.errors.push('could not delete song');
-	          $scope.getAll();
-	        });
-	    };
-
-	    $scope.loadSong = function(song) {
-	      $scope.songLoader(song);
-	      $location.path('/songs');
-	    };
-
-	  }]);
-	};
-
-
-/***/ },
-/* 16 */
 /***/ function(module, exports) {
 
 	/*
@@ -31951,6 +31818,156 @@
 	            }
 	        };
 	    }]);
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(app) {
+	  __webpack_require__(13)(app);
+	  __webpack_require__(14)(app);
+	  __webpack_require__(15)(app);
+	};
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('SignupController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
+	    $scope.headingText = 'sign up to create sweet jams';
+	    $scope.buttonText = 'sign up';
+	    $scope.userRelation = 'go to signin'
+	    $scope.authenticate = function(user) {
+	      $http.post('/api/signup', user)
+	        .then(function(res){
+	          $cookies.put('token', res.data.token);
+	          $scope.getUser();
+	          $location.path('/songs');
+	        }, function(err) {
+	          console.log(err.data);
+	        });
+	    };
+
+	    $scope.switchAuthView = function() {
+	      $location.path('/signin');
+	    };
+	    $scope.makeSong = function() {
+	      $location.path('/songs');
+	    };
+	    $scope.viewSongs = function() {
+	      $location.path('/savedsongs');
+	    };
+	  }]);
+	};
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('SigninController', ['$scope', '$http', '$location', '$base64', '$cookies', function($scope, $http, $location, $base64, $cookies) {
+	    $scope.headingText = 'sign in to existing user';
+	    $scope.buttonText = 'sign in';
+	    $scope.userRelation = 'go to signup'
+	    $scope.authenticate = function(user) {
+	      $http({
+	        method: 'GET',
+	        url: '/api/signin',
+	        headers: {
+	          'Authorization': 'Basic ' + $base64.encode(user.username + ':' + user.password)
+	        }
+	      })
+	      .then(function(res) {
+	        $cookies.put('token', res.data.token);
+	        $scope.getUser(); //from auth controller
+	        $location.path('/songs');
+	      }, function(err) {
+	        console.log(err);
+	      });
+	    };
+	    $scope.switchAuthView = function() {
+	      $location.path('/signup');
+	    };
+	    $scope.makeSong = function() {
+	      $location.path('/songs');
+	    };
+	    $scope.viewSongs = function() {
+	      $location.path('savedsongs');
+	    };
+	  }]);
+	};
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('AuthController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
+	    
+	    $scope.getUser = function() {
+	      $scope.token = $cookies.get('token');
+	      $http.defaults.headers.common.token = $scope.token;
+	      $http.get('/api/users')
+	      .then(function(res) {
+	        $scope.currentUser = res.data.username;
+	      }, function(err) {
+	        console.log(err);
+	      });
+	    };
+
+	    $scope.songLoader = function(song) { //gets set in save_songs_controller from the /savesongs view, and then called from in client.js from /songs view
+	      if(song) $scope.loadThisSong = song;
+	      else return $scope.loadThisSong;
+	    };
+	  }]);
+	};
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	var angular = window.angular;
+
+	module.exports = function(app) {
+	  app.controller('SavedSongsController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+	    $scope.songs = [];
+
+	    if (!$scope.token) $location.path('/signup');
+
+	    $scope.getAll = function() {
+	      $http.get('/api/allsongs')
+	        .then(function(res) {
+	          $scope.songs = res.data;
+	        }, function(err) {
+	          console.log(err.data);
+	        });
+	    };
+	    
+	    $scope.remove = function(song) {
+	      $scope.songs.splice($scope.songs.indexOf(song), 1);
+	      $http.delete('/api/songs/' + song._id)
+	        .then(function(res) {
+	          console.log('song deleted');
+	        }, function(err) {
+	          console.log(err.data);
+	          $scope.errors.push('could not delete song');
+	          $scope.getAll();
+	        });
+	    };
+
+	    $scope.loadSong = function(song) {
+	      $scope.songLoader(song);
+	      $location.path('/songs');
+	    };
+
+	  }]);
+	};
 
 
 /***/ }
