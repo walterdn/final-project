@@ -18,3 +18,10 @@
 * To test out a melody with your song, hit "Play" again and either click on the grey notes or press a valid keyboard key beginning with 'a' and continuing down the line (ex: a, s, d, f, ...).
 
 * Once you are ready to record your song, click "Record Next Play", hit "Play" and then play your notes as the song chords play out.
+
+<h2>Save your Song</h2>
+<em>Note: you must be logged in to save a song</em>
+
+* Once you are satisfied with a recording, you may click the "save song" button to enter in the name of your masterpiece! 
+
+* After you submit the name, you may now view your song in the global catalog by clicking on the "view songs" button.
