@@ -66,6 +66,7 @@
   <button class="musicBtns" ng-click="reset()">reset</button>
   <button class="musicBtns" ng-click="saveSong()">save song</button>
   <button class="musicBtns" ng-click="viewSongs()">view songs</button>
+  <button class="musicBtns" ng-if="!currentUser" ng-click="goToLogin()">login</button>
 </div>
 
 </section>
