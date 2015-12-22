@@ -188,12 +188,6 @@
 			bufferLoader = new BufferLoader(
 	        context,
 	        [
-	        "chords/amaj.wav",
-	        "chords/amin.wav",
-	        "chords/bflatmaj.wav",
-	        "chords/bflatmin.wav",
-	        "chords/bmaj.wav",
-	        "chords/bmin.wav",
 	        "chords/cmaj.wav",
 	        "chords/cmin.wav",
 	        "chords/csharpmaj.wav",
@@ -212,6 +206,12 @@
 	        "chords/gmin.wav",
 	        "chords/gsharpmaj.wav",
 	        "chords/gsharpmin.wav",
+	        "chords/amaj.wav",
+	        "chords/amin.wav",
+	        "chords/bflatmaj.wav",
+	        "chords/bflatmin.wav",
+	        "chords/bmaj.wav",
+	        "chords/bmin.wav",
 	        "notes/a.wav",
 	        "notes/ashrp.wav",
 	        "notes/b.wav",
@@ -259,6 +259,11 @@
 		$scope.viewSongs = function() {
 			$scope.reset();
 			$location.path('/savedsongs');
+		};
+
+		$scope.goToLogin = function() {
+			$scope.reset();
+			$location.path('/signin');
 		};
 
 		$scope.logOut2 = function() {
