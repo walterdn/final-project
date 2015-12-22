@@ -1,5 +1,4 @@
-<button class="buttons" ng-if="currentUser" ng-click="logOut()" id="logOut">log out of {{currentUser}}</button>
-<h1 class="title" ng-if="!doneLoadingSounds"> loading...</h1>
+<button class="buttons" ng-if="currentUser" ng-click="logOut2(); logOut()" id="logOut">log out of {{currentUser}}</button>
 
 <section ng-init="loadASong()">
 <section ng-if="doneLoadingSounds">

@@ -135,13 +135,9 @@ module.exports = function(app) {
 		$location.path('/savedsongs');
 	};
 
-	$scope.logOut = function() {
+	$scope.logOut2 = function() {
 		$scope.reset();
-    $scope.token = null;
-    $scope.currentUser = null;
-    $cookies.remove('token');
-    $location.path('/signin');
-  };
+	};
 
 	$(window).keypress(function(e) { //plays notes upon keypresses of a, s, d, f, g, h, j, k, l, and space bar to play. 
 		if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);//breaks if you ever leave the main page then come back to it in the same session
