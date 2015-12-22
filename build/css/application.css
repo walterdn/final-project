@@ -235,8 +235,7 @@ div {
   background: #cc2900;
   color: white;
   border-radius: 5px;
-  font-family: "Lucida Console", Monaco, monospace;
-  text-decoration: none; }
+  font-family: "Lucida Console", Monaco, monospace; }
 
 .buttons:hover, .savedSongBtns:hover, .deleteSongBtns:hover, .musicBtns:hover {
   background: white;
@@ -254,7 +253,8 @@ div {
   display: flex;
   flex-wrap: nowrap;
   font-size: 1.4em;
-  padding: 6px; }
+  padding: 6px;
+  max-height: 42px; }
 
 .deleteSongBtns {
   font-size: 1.4em;
@@ -263,7 +263,7 @@ div {
   height: 42px;
   margin-top: -42px;
   position: absolute;
-  right: -18px; }
+  right: -24px; }
 
 .authSection {
   display: block;

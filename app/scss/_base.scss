@@ -259,7 +259,6 @@ div {
   color: white;
   border-radius: 5px;
   font-family: "Lucida Console", Monaco, monospace;
-  text-decoration: none;
 }
 
 .buttons:hover {
@@ -284,6 +283,7 @@ div {
 	flex-wrap: nowrap;
 	font-size: 1.4em;
 	padding: 6px;
+	max-height: 42px;
 }
 
 .deleteSongBtns {
@@ -294,7 +294,7 @@ div {
   height: 42px;
   margin-top: -42px;
   position: absolute;
-  right: -18px;
+  right: -24px;
 }
 
 .authSection {
