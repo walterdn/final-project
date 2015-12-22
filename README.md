@@ -11,7 +11,9 @@
 
 <h2>Composing a Song</h2>
 * To build a basic 4 chord song structure, grab a chord by clicking and dragging it into the chosen chords field below. 
+
 * Before dragging your first chord in, the view only displays all chords. After you drag your first chord in, available key signatures will populate at the top, followed by available notes, and then the remaining chords to select from. As you drag, the key signatures will begin to filter down. This will also filter your remaining chord choices to ensure you remain within a recognized key signature.
+
 * Once you have your chords in place, you may hit "Play" to listen to the song. If a chord is out of place, you can swap it with any chord in your song by clicking and dragging that chord to the chord you want to swap with.
 * To test out a melody with your song, hit "Play" again and either click on "Allowed Notes" or press a valid keyboard key beginning with 'a' and continuing down the line (ex: a, s, d, f, ...).
 * Once you are ready to record your song, click "Record Next Play"
