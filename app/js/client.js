@@ -21,36 +21,50 @@ module.exports = function(app) {
 	];
 
 	$scope.chords = [
-		{name: 'c maj', notes: ['C', 'E', 'G']},
-		{name: 'c min', notes: ["C", "D#", "G"]},
-		{name: 'c sharp maj', notes: ["C#", "F", "G#"]},
-		{name: 'c sharp min', notes: ["C#", "E", "G#"]},	
-		{name: 'd maj', notes: ["D", "F#", "A"]},
-		{name: 'd min', notes: ["D", "F", "A"]},
-		{name: 'e flat maj', notes: ["D#", "G", "A#"]},
-		{name: 'e flat min', notes: ["D#", "F#", "A#"]},
-		{name: 'e maj', notes: ["E", "G#", "B"]},
-		{name: 'e min', notes: ["E", "G", "B"]},
-		{name: 'f maj', notes: ["F", "A", "C"]},
-		{name: 'f min', notes: ["F", "G#", "C"]},
-		{name: 'f sharp maj', notes: ["F#", "A#", "C#"]},
-		{name: 'f sharp min', notes: ["F#", "A", "C#"]},
-		{name: 'g maj', notes: ["G", "B", "D"]},
-		{name: 'g min', notes: ["G", "A#", "D"]},
-		{name: 'g sharp maj', notes: ["G#", "C", "D#"]},
-		{name: 'g sharp min', notes: ["G#", "B", "D#"]},
-		{name: 'a maj', notes: ["A", "C#", "E"]},
-		{name: 'a min', notes: ["A", "C", "E"]},
-		{name: 'b flat maj', notes: ["A#", "D", "F"]},
-		{name: 'b flat min', notes: ["A#", "C#", "F"]},
-		{name: 'b maj', notes: ["B", "D#", "F#"]},
-		{name: 'b min', notes: ["B", "D", "F#"]}
+		{name: 'c maj', notes: ['C', 'E', 'G'], sound: {}},
+		{name: 'c min', notes: ["C", "D#", "G"], sound: {}},
+		{name: 'c sharp maj', notes: ["C#", "F", "G#"], sound: {}},
+		{name: 'c sharp min', notes: ["C#", "E", "G#"], sound: {}},	
+		{name: 'd maj', notes: ["D", "F#", "A"], sound: {}},
+		{name: 'd min', notes: ["D", "F", "A"], sound: {}},
+		{name: 'e flat maj', notes: ["D#", "G", "A#"], sound: {}},
+		{name: 'e flat min', notes: ["D#", "F#", "A#"], sound: {}},
+		{name: 'e maj', notes: ["E", "G#", "B"], sound: {}},
+		{name: 'e min', notes: ["E", "G", "B"], sound: {}},
+		{name: 'f maj', notes: ["F", "A", "C"], sound: {}},
+		{name: 'f min', notes: ["F", "G#", "C"], sound: {}},
+		{name: 'f sharp maj', notes: ["F#", "A#", "C#"], sound: {}},
+		{name: 'f sharp min', notes: ["F#", "A", "C#"], sound: {}},
+		{name: 'g maj', notes: ["G", "B", "D"], sound: {}},
+		{name: 'g min', notes: ["G", "A#", "D"], sound: {}},
+		{name: 'g sharp maj', notes: ["G#", "C", "D#"], sound: {}},
+		{name: 'g sharp min', notes: ["G#", "B", "D#"], sound: {}},
+		{name: 'a maj', notes: ["A", "C#", "E"], sound: {}},
+		{name: 'a min', notes: ["A", "C", "E"], sound: {}},
+		{name: 'b flat maj', notes: ["A#", "D", "F"], sound: {}},
+		{name: 'b flat min', notes: ["A#", "C#", "F"], sound: {}},
+		{name: 'b maj', notes: ["B", "D#", "F#"], sound: {}},
+		{name: 'b min', notes: ["B", "D", "F#"], sound: {}}
 	];
 
 	$scope.context; 
 	$scope.bufferLoader;
 	context = new AudioContext();
 	$scope.doneLoadingSounds = false;
+
+	$scope.finishedInitialLoading = function(bufferList) {
+     //adds chords as buffers to $scope.chords
+     //does not store references to note buffers...
+    for(var item in $scope.chords){
+
+   		$scope.chords[item].sound = context.createBufferSource();
+   		$scope.chords[item].sound.buffer = bufferList[item]; 
+   		$scope.chords[item].sound.connect(context.destination);
+
+    }
+   	$scope.doneLoadingSounds = true;
+   	$scope.$apply();
+ 	};
 
 
 	$scope.loadSounds = function(){ //loads all sounds into buffer on pageload
@@ -93,13 +107,8 @@ module.exports = function(app) {
         "notes/fshrp.wav",
         "notes/g.wav",
         "notes/gshrp.wav"
-        ], function(bufferList) {
-        	var sound = context.createBufferSource();
-    			sound.buffer = bufferList[0];
-    			sound.connect(context.destination);
-        	$scope.doneLoadingSounds = true;
-        	$scope.$apply();
-        }
+        ], 
+        $scope.finishedInitialLoading
     );
 
     bufferLoader.load();
@@ -184,6 +193,7 @@ module.exports = function(app) {
 		}
 	};
 
+	//this now only gets called by a note...
 	$scope.finishedLoading = function(bufferList) { //audio playing function
     //Create source for audio context
     var sound = context.createBufferSource();
@@ -194,16 +204,11 @@ module.exports = function(app) {
 
 
 	$scope.playChord = function(chord){ //plays one chord sound
-		var name = helper.removeSpaces(chord.name);
-		bufferLoader = new BufferLoader(
-        context,
-        [
-        "chords/" + name + ".wav"
-        ],
-        $scope.finishedLoading
-    );
 
-    bufferLoader.load();
+		var source = context.createBufferSource();
+  	source.buffer = chord.sound.buffer;
+ 	  source.connect(context.destination);
+  	source.start(0);
 	}; 
 
 	$scope.playNote = function(note){ //plays a single note, also records it to melody if you are recording
