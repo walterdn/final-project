@@ -144,6 +144,11 @@ module.exports = function(app) {
 		$location.path('/savedsongs');
 	};
 
+	$scope.goToLogin = function() {
+		$scope.reset();
+		$location.path('/signin');
+	};
+
 	$scope.logOut2 = function() {
 		$scope.reset();
 	};
