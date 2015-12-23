@@ -154,6 +154,15 @@ module.exports = function(app) {
 		if (e.which == 106) $scope.playNote($scope.allowedNotes[6]);
 		if (e.which == 107) $scope.playNote($scope.allowedNotes[7]);
 		if (e.which == 108) $scope.playNote($scope.allowedNotes[8]);
+		if (e.which == 65) $scope.playNote($scope.allowedNotes[0]);
+		if (e.which == 83) $scope.playNote($scope.allowedNotes[1]);
+		if (e.which == 68) $scope.playNote($scope.allowedNotes[2]);
+		if (e.which == 70) $scope.playNote($scope.allowedNotes[3]);
+		if (e.which == 71) $scope.playNote($scope.allowedNotes[4]);
+		if (e.which == 72) $scope.playNote($scope.allowedNotes[5]);
+		if (e.which == 74) $scope.playNote($scope.allowedNotes[6]);
+		if (e.which == 75) $scope.playNote($scope.allowedNotes[7]);
+		if (e.which == 76) $scope.playNote($scope.allowedNotes[8]);
 		
 		if (e.which == 32) $scope.playSong();
 		if (e.which == 114)	{
