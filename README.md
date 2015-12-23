@@ -4,6 +4,36 @@
 
 <em>Welcome to Song Maker, where anyone can create a melodious jam.</em>
 
+<h2>Collaborators</h2>
+<table>
+<thead>
+  <tr>
+    <th>Walter Nicholas</th>
+    <th>Jenny Pollack</th>
+    <th>Rick Patci</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>
+      <a href="https://www.github.com/walterdn">
+        <img src="https://status.github.com/images/invertocat.png">
+      </a>
+    </td>
+    <td>
+      <a href="https://www.github.com/jennypollack">
+        <img src="https://avatars1.githubusercontent.com/u/3885055?v=3&s=96">
+      </a>
+    </td>
+    <td>
+      <a href="https://www.github.com/patci">
+        <img src="https://avatars1.githubusercontent.com/u/12869788?v=3&s=96">
+      </a>
+    </td>
+  </tr>
+</tbody>
+</table>
+
 <h2>Getting Started</h2>
 * Create an account <strong>or</strong> login to ensure your songs get saved to the global catalog.
 * If you want to just experiment, simply click "make songs" to get started fast.
@@ -25,3 +55,4 @@
 * Once you are satisfied with a recording, you may click the "save song" button to enter in the name of your masterpiece! 
 
 * After you submit the name, you may now view your song in the global catalog by clicking on the "view songs" button.
+
