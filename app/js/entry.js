@@ -4,19 +4,17 @@ require('angular-cookies');
 require('angular-base64');
 require('./ngDraggable');
 var angular = window.angular;
-var BufferLoader = require('./buffer-loader');
-
 
 var songWriterApp = angular.module('SongWriterApp', ['ngRoute', 'ngCookies', 'base64', 'ngDraggable']);
-require('./client')(songWriterApp);
+require('./song_making_controller')(songWriterApp);
 require('./auth/auth')(songWriterApp);
-require('./songs/saved_songs_controller')(songWriterApp);
+require('./saved_songs_controller')(songWriterApp);
 
 songWriterApp.config(['$routeProvider', function($route) {
   $route
     .when('/songs', {
       templateUrl: '/templates/musical_view.html',
-      controller: 'MusicController'
+      controller: 'SongMakingController'
     })
     .when('/signup', {
       templateUrl: '/templates/auth_view.html',
