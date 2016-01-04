@@ -13,83 +13,14 @@ module.exports = function(app) {
 	var mySong = new SongMaker();
 	$scope.allowedChords = mySong.getAllowedChords();
 	$scope.chosenChords = mySong.getChosenChords();
-	$scope.melody = [];
+	$scope.melody = mySong.getMelody();
 
 	var bufferLoader;
 	var context = new AudioContext();
-	var startTime;
+	var startTimeOfRecording;
 	var currentlyPlaying = false;
 	var currentlyRecording = false;
 	$scope.willRecordNextPlay = false;
-
-	function loadAllSounds() { //loads all sounds into buffer on pageload
-		bufferLoader = new BufferLoader(
-        context,
-        [
-        "chords/amaj.mp3",
-        "chords/amin.mp3",
-        "chords/bflatmaj.mp3",
-        "chords/bflatmin.mp3",
-        "chords/bmaj.mp3",
-        "chords/bmin.mp3",
-        "chords/cmaj.mp3",
-        "chords/cmin.mp3",
-        "chords/csharpmaj.mp3",
-        "chords/csharpmin.mp3",
-        "chords/dmaj.mp3",
-        "chords/dmin.mp3",
-        "chords/eflatmaj.mp3",
-        "chords/eflatmin.mp3",
-        "chords/emaj.mp3",
-        "chords/emin.mp3",
-        "chords/fmaj.mp3",
-        "chords/fmin.mp3",
-        "chords/fsharpmaj.mp3",
-        "chords/fsharpmin.mp3",
-        "chords/gmaj.mp3",
-        "chords/gmin.mp3",
-        "chords/gsharpmaj.mp3",
-        "chords/gsharpmin.mp3",
-        "notes/a.mp3",
-        "notes/ashrp.mp3",
-        "notes/b.mp3",
-        "notes/c.mp3",
-        "notes/cshrp.mp3",
-        "notes/d.mp3",
-        "notes/dshrp.mp3",
-        "notes/e.mp3",
-        "notes/f.mp3",
-        "notes/fshrp.mp3",
-        "notes/g.mp3",
-        "notes/gshrp.mp3"
-        ], function(bufferList) {
-        	var sound = context.createBufferSource();
-    			sound.buffer = bufferList[0];
-    			sound.connect(context.destination);
-        	$scope.doneLoadingSounds = true;
-        	$scope.$apply();
-        }
-    );
-
-    bufferLoader.load();
-	};
-
-	loadAllSounds();
-
-	$scope.loadASong = function() { //loads a saved song
-		$scope.reset();
-		var song = $scope.songLoader(); //comes from a global app variable stored in auth_controller.js
-		if (song) {
-			song.chords.forEach(chord => {
-				mySong.addChord(new Chord(chord.name, chord.notes));
-			});
-			$scope.melody = song.melody;
-			filter();
-			$scope.cleanSlate = false;
-			$scope.songLoader('clearSongLoader');
-			$scope.$apply();
-		}
-	};
 
 	$scope.navigateTo = function(url) {
 		$scope.reset();
@@ -116,38 +47,6 @@ module.exports = function(app) {
 		}
 	});
 
-	$scope.saveSong = function() { //saves your chord progression + melody to the database
-		if (!$scope.currentUser) {
-			alert('Must be logged in to save songs.');
-		} else {
-			var songName = prompt("Name your masterpiece:", "");
- 		  if (songName != null) {
-	 		  var successCb = function(res) {
-	        console.log('Song saved.')
-	      };
-	      var errorCb = function(err) {
-	        console.log('Save failed.');   
-	      };
-	      var chordObjsForDb = [];
-	      mySong.getChosenChords().forEach(chord => chordObjsForDb.push({
-	      	name: chord.getName(),
-	      	notes: chord.getNotes(),
-	      }));
-	      var req = {
-	        method: 'POST',
-	        url:'/api/savesong/',
-	        data: {	name: songName, 
-	        				composer: $scope.currentUser, 
-	        				chords: chordObjsForDb, 
-	        				melody: $scope.melody
-	        			}
-	      };
-
-	      $http(req).then(successCb, errorCb);
-		  }
-		}
-	};
-
 	$scope.playChord = function(chord){ //plays one chord sound
 		var fileName = helper.removeSpaces(chord.getName());
 		playSound('chords', fileName);
@@ -156,23 +55,20 @@ module.exports = function(app) {
 	$scope.playNote = function(note) { //plays a single note, also records it to melody if you are recording
 	  if (currentlyRecording) recordToMelody(note);
 		
-		var fileName = helper.changeName(note);
+		var fileName = helper.replaceSharpSymbol(note);
 		playSound('notes', fileName);
 
     highlightBackground(note);
 	};
 
 	function recordToMelody(note) { //saves an object to melody for each note you play while recording. stores WHICH note (name), and WHEN (time)
-		var millisecondsFromStart = Math.round(new Date() - startTime);
-		$scope.melody.push({
-			name: note,
-			time: millisecondsFromStart
-		});
+		var millisecondsFromStart = Math.round(new Date() - startTimeOfRecording);
+		mySong.addNote(note, millisecondsFromStart);
 		$scope.$apply();
 	}
 
 	function playBackNote(note) { //plays back a note from your recorded melody
-		var fileName = helper.changeName(note);
+		var fileName = helper.replaceSharpSymbol(note);
 		playSound('notes', fileName);
 	}
 
@@ -198,7 +94,6 @@ module.exports = function(app) {
 	function playMelody() { //plays your recorded melody
 		$scope.melody.forEach(function(note) {
 			setTimeout(function() {
-				 
 				highlightBorder('note', note);
 				playBackNote(note.name);
 			}, note.time);
@@ -226,7 +121,7 @@ module.exports = function(app) {
 			if ($scope.willRecordNextPlay) {
 				$scope.willRecordNextPlay = false;
 				currentlyRecording = true;
-				startTime = new Date();
+				startTimeOfRecording = new Date();
 				setTimeout(function() {
 					currentlyRecording = false;
 				}, 4400);
@@ -265,11 +160,19 @@ module.exports = function(app) {
 		if ($scope.chosenChords.length === 0) $scope.reset();
 	};
 
+	$scope.removeNote = function(index) {
+		mySong.removeNote(index);
+	};
+
 	$scope.reset = function() { //resets to initial state
 		$scope.cleanSlate = true;
 		$scope.chosenChords = mySong.resetChords();
+		$scope.melody = mySong.resetMelody();
 		filter();
-		$scope.melody = [];
+	};
+
+	$scope.clearMelody = function() {
+		$scope.melody = mySong.resetMelody();
 	};
 
 	function filter() { //filters allowed keys, allowed notes, and allowed chords, based on chosen chords
@@ -316,13 +219,125 @@ module.exports = function(app) {
 	};
 
 	$scope.setNoteClass = function(string) { //used to target a specific note in allowedNotes
-		return helper.changeName(string) + 'note'; //for the purpose of briefly highlighting that note's background upon play
+		return helper.replaceSharpSymbol(string) + 'note'; //for the purpose of briefly highlighting that note's background upon play
 	};
 
 	$scope.setNoteClass2 = function(note) { //used to target a specific note in your melody
 		var rename = note.name[0] + note.time;  //for the purpose of briefly highlighting that note's border upon playback
 		return rename; 
 	};
+
+	$scope.loadASong = function() { //loads a saved song if one has been loaded into songLoader
+		$scope.reset();
+		var song = $scope.songLoader(); //comes from a global app variable stored in auth_controller.js
+		if (song) {
+			song.chords.forEach(chord => {
+				mySong.addChord(new Chord(chord.name, chord.notes));
+			});
+			$scope.melody = mySong.setMelody(song.melody);
+			filter();
+			$scope.cleanSlate = false;
+			$scope.songLoader('clearSongLoader');
+			$scope.$apply();
+		}
+	};
+
+	$scope.saveSong = function() { //saves your chord progression + melody to the database
+		var savableChordObjects = [];
+    mySong.getChosenChords().forEach(chord => savableChordObjects.push({
+    	name: chord.getName(),
+    	notes: chord.getNotes()
+    }));
+
+		if (!$scope.currentUser) {
+
+			$scope.songLoader({ //temporarily stores song so user will have access to it after logging in
+				chords: savableChordObjects,
+				melody: mySong.getMelody()
+			});
+			alert('Must be logged in to save songs (your song will still be here after you login).');
+			$scope.navigateTo('signin');
+
+		} else {
+
+			var songName = prompt("Name your masterpiece:", "");
+ 		  if (songName != null) {
+	 		  var successCb = function(res) {
+	        console.log('Song saved.')
+	      };
+	      var errorCb = function(err) {
+	        console.log('Save failed.');   
+	      };
+	      
+	      var req = {
+	        method: 'POST',
+	        url:'/api/savesong/',
+	        data: {	name: songName, 
+	        				composer: $scope.currentUser, 
+	        				chords: savableChordObjects, 
+	        				melody: mySong.getMelody()
+	        			}
+	      };
+
+	      $http(req).then(successCb, errorCb);
+		  }
+		}
+	};
+
+	function loadAllSounds() { //loads all sounds into buffer on pageload
+		bufferLoader = new BufferLoader(
+      context,
+      [
+      "chords/amaj.mp3",
+      "chords/amin.mp3",
+      "chords/bflatmaj.mp3",
+      "chords/bflatmin.mp3",
+      "chords/bmaj.mp3",
+      "chords/bmin.mp3",
+      "chords/cmaj.mp3",
+      "chords/cmin.mp3",
+      "chords/csharpmaj.mp3",
+      "chords/csharpmin.mp3",
+      "chords/dmaj.mp3",
+      "chords/dmin.mp3",
+      "chords/eflatmaj.mp3",
+      "chords/eflatmin.mp3",
+      "chords/emaj.mp3",
+      "chords/emin.mp3",
+      "chords/fmaj.mp3",
+      "chords/fmin.mp3",
+      "chords/fsharpmaj.mp3",
+      "chords/fsharpmin.mp3",
+      "chords/gmaj.mp3",
+      "chords/gmin.mp3",
+      "chords/gsharpmaj.mp3",
+      "chords/gsharpmin.mp3",
+      "notes/a.mp3",
+      "notes/ashrp.mp3",
+      "notes/b.mp3",
+      "notes/c.mp3",
+      "notes/cshrp.mp3",
+      "notes/d.mp3",
+      "notes/dshrp.mp3",
+      "notes/e.mp3",
+      "notes/f.mp3",
+      "notes/fshrp.mp3",
+      "notes/g.mp3",
+      "notes/gshrp.mp3"
+      ], 
+      function(bufferList) {
+      	var sound = context.createBufferSource();
+  			sound.buffer = bufferList[0];
+  			sound.connect(context.destination);
+      	$scope.doneLoadingSounds = true;
+      	$scope.$apply();
+      }
+    );
+
+    bufferLoader.load();
+	};
+
+	loadAllSounds();
 
 //end of main song app controller body
 }]);

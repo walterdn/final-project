@@ -5,6 +5,7 @@ var helper = require('./../app/js/helper_functions');
 var SongMaker = function() {
 	var MAX_NUM_CHORDS = 4;
 	var chosenChords = [];
+	var melody = [];
 
 	var allChords = [
 		new Chord('c maj', ['C', 'E', 'G']),
@@ -47,6 +48,32 @@ var SongMaker = function() {
 		new Key('G Major/E Minor', ['G', 'A', 'B', 'C', 'D', 'E', 'F#']),
 		new Key('Ab Major/F Minor', ['G#', 'A#', 'C', 'C#', 'D#', 'F', 'G'])
 	];
+
+	this.addNote = (note, time) => {
+		melody.push({
+			name: note,
+			time: time
+		});
+	};
+
+	this.removeNote = index => {
+		melody.splice(index, 1);
+	};
+
+	this.getMelody = () => {
+		return melody;
+	};
+
+	this.setMelody = savedMelodyArray => {
+		melody = [];
+		melody = savedMelodyArray;
+		return melody;
+	};
+
+	this.resetMelody = () => {
+		melody = [];
+		return melody;
+	};
 
 	this.addChord = chord => {
 		if (chosenChords.length < MAX_NUM_CHORDS) {
