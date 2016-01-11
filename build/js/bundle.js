@@ -31361,6 +31361,8 @@
 		$scope.doneLoadingSounds = false;
 		$scope.cleanSlate = true;
 
+		var measureLength = 2000; // 120 BPM
+
 		var mySong = new SongMaker();
 		$scope.allowedChords = mySong.getAllowedChords();
 		$scope.chosenChords = mySong.getChosenChords();
@@ -31378,7 +31380,7 @@
 			$location.path('/' + url);
 		};
 
-		$(window).keypress(function(e) { //plays notes upon keypresses of a, s, d, f, g, h, j, k, l, and space bar to play, r to record next. 
+		$(window).keypress(function(e) { //plays notes upon keypresses of a, s, d, f, g, h, j, k, l, and space bar to play, r to record next.
 			if(!$scope.cleanSlate) {
 				if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);
 				if (e.which == 115) $scope.playNote($scope.allowedNotes[1]);
@@ -31389,7 +31391,7 @@
 				if (e.which == 106) $scope.playNote($scope.allowedNotes[6]);
 				if (e.which == 107) $scope.playNote($scope.allowedNotes[7]);
 				if (e.which == 108) $scope.playNote($scope.allowedNotes[8]);
-				
+
 				if (e.which == 32) $scope.playSong();
 				if (e.which == 114)	{
 					$scope.toggleRecording();
@@ -31401,11 +31403,11 @@
 		$scope.playChord = function(chord){ //plays one chord sound
 			var fileName = helper.removeSpaces(chord.getName());
 			playSound('chords', fileName);
-		}; 
+		};
 
 		$scope.playNote = function(note) { //plays a single note, also records it to melody if you are recording
 		  if (currentlyRecording) recordToMelody(note);
-			
+
 			var fileName = helper.replaceSharpSymbol(note);
 			playSound('notes', fileName);
 
@@ -31413,7 +31415,7 @@
 		};
 
 		function recordToMelody(note) { //saves an object to melody for each note you play while recording. stores WHICH note (name), and WHEN (time)
-			var millisecondsFromStart = Math.round(new Date() - startTimeOfRecording);
+			var millisecondsFromStart = (new Date() - startTimeOfRecording)/(measureLength * 4);
 			mySong.addNote(note, millisecondsFromStart);
 			$scope.$apply();
 		}
@@ -31427,7 +31429,7 @@
 			bufferLoader = new BufferLoader(
 				context,
 				[category + '/' + fileName + '.mp3'],
-				function (bufferList) { 
+				function (bufferList) {
 			    var sound = context.createBufferSource();
 			    sound.buffer = bufferList[0];
 			    sound.connect(context.destination);
@@ -31447,27 +31449,30 @@
 				setTimeout(function() {
 					highlightBorder('note', note);
 					playBackNote(note.name);
-				}, note.time);
+				}, note.time * (measureLength * 4));
 			});
 		}
-		
+
 		function playChords() { //plays your chord progression
 			$scope.chosenChords.forEach(function(chord, index) {
 				setTimeout(function() {
 					highlightBorder('chord', chord);
-					$scope.playChord(chord); 
-				}, index*1100);
+					$scope.playChord(chord);
+				}, index*measureLength);
 			});
 		}
 
 		$scope.playSong = function() { //plays your chords + melody
 			var loops = $('input[id="loopNumber"]').val();
+			var bpm = $('input[id="bpm"]').val();
+
+			measureLength = 120/bpm * 2000;
 
 			if (!currentlyPlaying) {
 				currentlyPlaying = true;
 				setTimeout(function() {
 					currentlyPlaying = false;
-				}, (4400 * loops));
+				}, ((measureLength * 4) * loops));
 
 				if ($scope.willRecordNextPlay) {
 					$scope.willRecordNextPlay = false;
@@ -31475,14 +31480,14 @@
 					startTimeOfRecording = new Date();
 					setTimeout(function() {
 						currentlyRecording = false;
-					}, 4400);
+					}, (measureLength * 4));
 				}
 
 				for(i=0; i<loops; i++) {
 					setTimeout(function() {
 						playMelody();
 						playChords();
-					}, (i * 4400));	
+					}, (i * (measureLength * 4)));
 				}
 			}
 		};
@@ -31502,7 +31507,7 @@
 				mySong.addChord(dragData.chord);
 				filter();
 			}
-		};	
+		};
 
 		$scope.removeChord = function(index) { //removes chord from chosenChords, re-renders avaiable chords/notes
 			mySong.removeChord(index);
@@ -31542,7 +31547,7 @@
 
 		function highlightBorder(type, item) { //temporarily highlights border of a chosen chord or a melody note
 			if (type === 'note') {
-				var className = $scope.setNoteClass2(item); 
+				var className = $scope.setNoteClass2(item);
 				angular.element('.' + className).css('border', '3px solid #ff9900');
 				setTimeout(function() {
 					angular.element('.' + className).css('border', 'none');
@@ -31557,13 +31562,13 @@
 			}
 		}
 
-		$scope.calculateMarginFromTime = function(time) { //if input is 2200 (the total time of 4bars is 4400ms), this method returns string 50%
-			return parseFloat(time/44).toFixed(2).toString() + '%';
+		$scope.calculateMarginFromTime = function(time) { //if input is 2200 (the total time of 4bars is (measureLength * 4)ms), this method returns string 50%
+			return (time * 100).toString() + '%';
 		};
 
 		$scope.assignClassName = function(string) { //if input is 'f sharp maj', returns 'fmaj'
 			string = string.toLowerCase(); //this shortened string is used as a class name for applying background colors of chords and notes
-			var className = string.charAt(0); 
+			var className = string.charAt(0);
 			if (string.indexOf('maj') !== -1) className += 'maj';
 			if (string.indexOf('min') !== -1) className += 'min';
 			return className;
@@ -31575,7 +31580,7 @@
 
 		$scope.setNoteClass2 = function(note) { //used to target a specific note in your melody
 			var rename = note.name[0] + note.time;  //for the purpose of briefly highlighting that note's border upon playback
-			return rename; 
+			return rename;
 		};
 
 		$scope.loadASong = function() { //loads a saved song if one has been loaded into songLoader
@@ -31617,15 +31622,15 @@
 		        console.log('Song saved.')
 		      };
 		      var errorCb = function(err) {
-		        console.log('Save failed.');   
+		        console.log('Save failed.');
 		      };
-		      
+
 		      var req = {
 		        method: 'POST',
 		        url:'/api/savesong/',
-		        data: {	name: songName, 
-		        				composer: $scope.currentUser, 
-		        				chords: savableChordObjects, 
+		        data: {	name: songName,
+		        				composer: $scope.currentUser,
+		        				chords: savableChordObjects,
 		        				melody: mySong.getMelody()
 		        			}
 		      };
@@ -31675,7 +31680,7 @@
 	      "notes/fshrp.mp3",
 	      "notes/g.mp3",
 	      "notes/gshrp.mp3"
-	      ], 
+	      ],
 	      function(bufferList) {
 	      	var sound = context.createBufferSource();
 	  			sound.buffer = bufferList[0];

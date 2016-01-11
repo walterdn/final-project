@@ -44,11 +44,11 @@
   </section>
 
   <section ng-if="!cleanSlate" id="chosen-notes-container">
-    <div ng-repeat="note in melody" 
+    <div ng-repeat="note in melody"
          class="chosen-notes" ng-class="[assignClassName(note.name), setNoteClass2(note)]"
          ng-dblclick="removeNote($index)"
          ng-style="{'left':'{{calculateMarginFromTime(note.time)}}'}">
-      {{note.name}} 
+      {{note.name}}
     </div>
   </section>
 
@@ -57,9 +57,10 @@
     <button class ="recording-button" ng-if="!willRecordNextPlay" ng-click="toggleRecording()"></button>
     <button class ="recording-button blink" ng-if="willRecordNextPlay" ng-click="toggleRecording()"></button>
   </div>
-    
+
   <div class="music-buttons-container">
     <label>loop &times </label><input id="loopNumber" type="number" min="1" max="4" value="1">
+    <label>bpm</label><input id="bpm" type="number" min="60" max="180" value="120">
     <button class="musicBtns" ng-click="reset()">reset</button>
     <button class="musicBtns" ng-click="clearMelody()">clear melody</button>
     <button class="musicBtns" ng-click="saveSong()">save song</button>
