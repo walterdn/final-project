@@ -59,8 +59,8 @@
   </div>
 
   <div class="music-buttons-container">
-    <label>loop &times </label><input id="loopNumber" type="number" min="1" max="4" value="1">
-    <label>bpm</label><input id="bpm" type="number" min="60" max="180" value="120">
+    <label>loop &times </label><input type="number" min="1" max="3" ng-model="settings.loops"> 
+    <label>bpm</label><input type="number" min="60" max="180" ng-model="settings.bpm">
     <button class="musicBtns" ng-click="reset()">reset</button>
     <button class="musicBtns" ng-click="clearMelody()">clear melody</button>
     <button class="musicBtns" ng-click="saveSong()">save song</button>
