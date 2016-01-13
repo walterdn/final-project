@@ -50,7 +50,8 @@ div {
   height: 74px; }
 
 #chosen-notes-container {
-  height: 50px;
+  border-top: none;
+  height: 192px;
   position: relative; }
 
 #loopNumber {
@@ -100,11 +101,10 @@ div {
 .chosen-notes {
   color: white;
   text-align: center;
-  padding-top: 11px;
-  width: 30px;
-  font-size: 1.4em;
+  width: 24px;
+  font-size: 14px;
   position: absolute;
-  height: 39px; }
+  height: 16px; }
 
 .keys {
   background: white;
@@ -303,3 +303,7 @@ div {
 
 .blink {
   animation: blink 1s linear infinite; }
+
+.divider-lines {
+  border-top: 1px solid black;
+  width: 100%; }

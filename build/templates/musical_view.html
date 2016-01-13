@@ -44,10 +44,11 @@
   </section>
 
   <section ng-if="!cleanSlate" id="chosen-notes-container">
+    <div ng-repeat="line in dividerLines" class="divider-lines" ng-style="{'bottom':'{{positionDividers(line)}}'}"></div>
     <div ng-repeat="note in melody"
          class="chosen-notes" ng-class="[assignClassName(note.name), setNoteClass2(note)]"
          ng-dblclick="removeNote($index)"
-         ng-style="{'left':'{{calculateMarginFromTime(note.time)}}'}">
+         ng-style="{'bottom':'{{setBottomMarginFromNote(note.name)}}', 'left':'{{setLeftMarginFromTime(note.time)}}'}">
       {{note.name}}
     </div>
   </section>

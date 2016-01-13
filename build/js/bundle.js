@@ -31371,6 +31371,7 @@
 		$scope.allowedChords = mySong.getAllowedChords();
 		$scope.chosenChords = mySong.getChosenChords();
 		$scope.melody = mySong.getMelody();
+		$scope.dividerLines = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
 		var bufferLoader;
 		var context = new AudioContext();
@@ -31478,7 +31479,6 @@
 		$scope.playSong = function() { //plays your chords + melody
 			if (!$scope.settings.bpm) $scope.settings.bpm = 100;
 			if (!$scope.settings.loops) $scope.settings.loops = 1;
-
 			var loops = $scope.settings.loops;
 			var bpm = $scope.settings.bpm;
 
@@ -31570,7 +31570,6 @@
 		function highlightBorder(type, item) { //temporarily highlights border of a chosen chord or a melody note
 			if (type === 'note') {
 				var className = $scope.setNoteClass2(item);
-				console.log(className);
 				angular.element('.' + className).css('border', '3px solid #ff9900');
 				setTimeout(function() {
 					angular.element('.' + className).css('border', 'none');
@@ -31585,8 +31584,15 @@
 			}
 		}
 
-		$scope.calculateMarginFromTime = function(time) { //if input is .5, returns string 50%. gets called from musical_view.html
+		$scope.setLeftMarginFromTime = function(time) { //if input is .5, returns string 50%. gets called from musical_view.html
 			return (time * 100).toString() + '%'; 
+		};
+
+		$scope.setBottomMarginFromNote = function(noteName) {
+			var notesArray = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
+			var bottomMargin = (notesArray.indexOf(noteName)*16) + 'px';
+			console.log(bottomMargin);
+			return bottomMargin;
 		};
 
 		$scope.assignClassName = function(string) { //if input is 'f sharp maj', returns 'fmaj'
@@ -31661,6 +31667,10 @@
 		      $http(req).then(successCb, errorCb);
 			  }
 			}
+		};
+
+		$scope.positionDividers = function(lineNumber) {
+			return 16*lineNumber;
 		};
 
 		function convertToEvenMultiple(input, number) {
