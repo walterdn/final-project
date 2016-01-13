@@ -9,8 +9,12 @@ module.exports = function(app) {
 	app.controller('SongMakingController', ['$scope', '$http', '$location', function($scope, $http, $location) {
 	$scope.doneLoadingSounds = false;
 	$scope.cleanSlate = true;
+	$scope.settings = {
+		loops: 1,
+		bpm: 100
+	};
 
-	var measureLength = 2000; // 120 BPM
+	var measureLength; //gets set based on the current bpm, each time the user plays the song
 
 	var mySong = new SongMaker();
 	$scope.allowedChords = mySong.getAllowedChords();
@@ -64,9 +68,18 @@ module.exports = function(app) {
 	};
 
 	function recordToMelody(note) { //saves an object to melody for each note you play while recording. stores WHICH note (name), and WHEN (time)
-		var millisecondsFromStart = (new Date() - startTimeOfRecording)/(measureLength * 4);
-		mySong.addNote(note, millisecondsFromStart);
+		var msFromStart = (new Date() - startTimeOfRecording);
+		var time = quantize(msFromStart);
+		mySong.addNote(note, time);
 		$scope.$apply();
+	}
+
+	function quantize(milliseconds) {
+		var quantization = (1/32);
+		var multiple = measureLength * quantization;
+		var roundedTime = convertToEvenMultiple(milliseconds, multiple);
+		var timeFraction = (roundedTime/(measureLength*4)).toFixed(8);
+		return timeFraction;
 	}
 
 	function playBackNote(note) { //plays back a note from your recorded melody
@@ -112,16 +125,17 @@ module.exports = function(app) {
 	}
 
 	$scope.playSong = function() { //plays your chords + melody
-		var loops = $('input[id="loopNumber"]').val();
-		var bpm = $('input[id="bpm"]').val();
+		if (!$scope.settings.bpm) $scope.settings.bpm = 100;
+		if (!$scope.settings.loops) $scope.settings.loops = 1;
+		var loops = $scope.settings.loops;
+		var bpm = $scope.settings.bpm;
 
-		measureLength = 120/bpm * 2000;
+		measureLength = (120/bpm) * 1000;
+		measureLength = convertToEvenMultiple(measureLength, 16);
 
 		if (!currentlyPlaying) {
-			currentlyPlaying = true;
-			setTimeout(function() {
-				currentlyPlaying = false;
-			}, ((measureLength * 4) * loops));
+			
+			toggleCurrentlyPlayingOnThenOff(loops);
 
 			if ($scope.willRecordNextPlay) {
 				$scope.willRecordNextPlay = false;
@@ -141,6 +155,13 @@ module.exports = function(app) {
 		}
 	};
 
+	function toggleCurrentlyPlayingOnThenOff (loops) {
+		currentlyPlaying = true;
+		setTimeout(function() {
+			currentlyPlaying = false;
+		}, ((measureLength * 4) * loops));
+	}
+
 	$scope.swapOrAdd = function(index, dragData) { //swap position of two chords when you drag a chosen chord onto another chosen chord
 		if (dragData.source === 'chosen') {
 			var otherIndex = $scope.chosenChords.indexOf(dragData.chord);
@@ -148,7 +169,7 @@ module.exports = function(app) {
 		} else {
 			$scope.addChord(dragData);
 		}
-	}
+	};
 
 	$scope.addChord = function(dragData) { //adds chord to chosenChords array, re-renders avaible chords/notes
 		if (dragData.source === 'choices') {
@@ -197,22 +218,23 @@ module.exports = function(app) {
 	function highlightBorder(type, item) { //temporarily highlights border of a chosen chord or a melody note
 		if (type === 'note') {
 			var className = $scope.setNoteClass2(item);
+			console.log(className);
 			angular.element('.' + className).css('border', '3px solid #ff9900');
 			setTimeout(function() {
 				angular.element('.' + className).css('border', 'none');
-			}, 250);
+			}, 240);
 		}
 		if(type === 'chord') {
 			var className = $scope.assignClassName(item.getName());
 			angular.element('.' + className).css('border', '2px solid #ff9900');
 			setTimeout(function() {
 				angular.element('.' + className).css('border', '1px solid black');
-			}, 1040);
+			}, (measureLength - 100));
 		}
 	}
 
-	$scope.calculateMarginFromTime = function(time) { //if input is 2200 (the total time of 4bars is (measureLength * 4)ms), this method returns string 50%
-		return (time * 100).toString() + '%';
+	$scope.calculateMarginFromTime = function(time) { //if input is .5, returns string 50%. gets called from musical_view.html
+		return (time * 100).toString() + '%'; 
 	};
 
 	$scope.assignClassName = function(string) { //if input is 'f sharp maj', returns 'fmaj'
@@ -228,7 +250,7 @@ module.exports = function(app) {
 	};
 
 	$scope.setNoteClass2 = function(note) { //used to target a specific note in your melody
-		var rename = note.name[0] + note.time;  //for the purpose of briefly highlighting that note's border upon playback
+		var rename = note.name[0] + ((note.time * 1000).toFixed(0));  //for the purpose of briefly highlighting that note's border upon playback
 		return rename;
 	};
 
@@ -260,7 +282,7 @@ module.exports = function(app) {
 				chords: savableChordObjects,
 				melody: mySong.getMelody()
 			});
-			alert('Must be logged in to save songs (your song will still be here after you login).');
+			alert('Must be logged in to save songs. (Your song will still be here after you login)');
 			$scope.navigateTo('signin');
 
 		} else {
@@ -288,6 +310,11 @@ module.exports = function(app) {
 		  }
 		}
 	};
+
+	function convertToEvenMultiple(input, number) {
+		var x = Math.round(input/number);
+		return (x * number);
+	}
 
 	function loadAllSounds() { //loads all sounds into buffer on pageload
 		bufferLoader = new BufferLoader(
@@ -340,7 +367,7 @@ module.exports = function(app) {
     );
 
     bufferLoader.load();
-	};
+	}
 
 	loadAllSounds();
 
